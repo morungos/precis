@@ -1,0 +1,14 @@
+{
+  "name": "precis",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "coffee-script": "1.6.3",
+    "should": "1.2.2",
+    "mocha": "1.12.0",
+    "glob": "3.2.1"
+  }
+}
