@@ -1,16 +1,26 @@
 fs = require 'fs'
- 
-walk = (dir, f_visit) ->
-  _walk = (dir) ->
-    fns = fs.readdirSync dir
-    for fn in fns
-      fn = dir + '/' + fn
-      f_visit fn
-      if fs.statSync(fn).isDirectory()
-        _walk fn
-  _walk(dir)
 
+# Given a file, we need to be able to transparently uncompress and 
+# analyse the XML within it to cull out the abstract.
+
+walker = (dir, callback) ->
+  queue = [dir]
+
+  _walker = () ->
+    if queue.length > 0
+      first = queue.shift()
+      fs.stat first, (err, stats) ->
+        if stats && stats.isDirectory()
+          fs.readdir first, (err, files) ->
+            if files
+              for file in files
+                queue.push(first + "/" + file)
+            callback first, _walker
+        else
+          callback first, _walker
+  _walker()
 
 dir = '/Volumes/PubMed'
-action = console.log
-walk dir, action
+walker dir, (file, done) ->
+  console.log file
+  done()
