@@ -6,9 +6,12 @@ walker = require("./walker")
 
 base = "/Users/swatt/pubmed_xml"
 
+addFileToDatabase = (article) ->
+  
+
 extractFile = (xmlDoc, done) ->
   
-  for article in xmlDoc.find("//MedlineCitation")
+  for article in xmlDoc.find("//MedlineCitation[count(Abstract) > 0]")
     console.log "Analyzing PMID", article.get("PMID").text()
 
   done()
