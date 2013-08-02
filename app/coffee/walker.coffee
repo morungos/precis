@@ -20,7 +20,4 @@ walker = (dir, callback) ->
           callback first, _walker
   _walker()
 
-dir = '/Volumes/PubMed'
-walker dir, (file, done) ->
-  console.log file
-  done()
+module.exports.walk = walker
