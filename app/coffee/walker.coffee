@@ -18,6 +18,8 @@ walker = (dir, callback) ->
             callback first, _walker
         else
           callback first, _walker
+    else
+      callback undefined, _walker
   _walker()
 
 module.exports.walk = walker

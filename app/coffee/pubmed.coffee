@@ -1,8 +1,11 @@
 libxml  = require('libxmljs')
+expat   = require('node-expat')
 fs      = require('fs')
 zlib    = require('zlib')
 util    = require('util')
 mongodb = require('mongodb')
+
+memwatch = require('memwatch')
 
 walker  = require("./walker")
 
@@ -10,78 +13,104 @@ base    = "/Users/swatt/pubmed_xml"
 
 MongoClient = mongodb.MongoClient
 
-MongoClient.connect "mongodb://localhost:27017/pubmed", (err, db) ->
+# memwatch.on 'stats', (stats) ->
+#   console.log "GC stats", stats
 
-  db.collection 'pubmed', (err, pubmed) ->
+parseFile = (file, done) ->
+  console.log "Parsing", file
 
-    buildRecord = (article) ->
-      data = {}
-      data._id = article.get("PMID").text().trim()
+  MongoClient.connect "mongodb://localhost:27017/pubmed", (err, db) ->
+    db.collection 'pubmed', (err, pubmed) ->
 
-      debugger if data._id == '19867289'
+      stringData = []
+      articleData = {}
+      tagStack = []
+      seenArticles = 0
+      startAttributes = {}
+      meshTerm = {}
+      databank = {}
 
-      articleBody = article.find("Article[1]")[0]
-      data.title = articleBody.get("ArticleTitle").text().trim()
-
-      abstracts = articleBody.find("Abstract/AbstractText")
-      data.abstract = abstracts.map (abstractElement) ->
-        entry = {}
-        entry.text = abstractElement.text().trim()
-        entry.label = abstractElement.attr("Label") if abstractElement.attr("Label")
-        entry.category = abstractElement.attr("NlmCategory") if abstractElement.attr("NlmCategory")
-        entry
-
-      publicationTypes = articleBody.find("PublicationTypeList/PublicationType")
-      data.publicationTypes = publicationTypes.map (type) -> type.text().trim()
-
-      data.meshTerms = article.find("MeshHeadingList/MeshHeading").map (heading) ->
-        entry = {term: heading.get("DescriptorName").text().trim()}
-        entry.qualifiers = (value.text().trim() for value in heading.find("QualifierName"))
-        entry
-
-      data.year = articleBody.get("descendant::PubDate/Year").text().trim()
-      data
-
-    writeRecords = (records, callback) ->
-      if records.length == 0
-        callback()
-      else 
-        record = records.shift()
-        pubmed.update {_id: record._id}, record, {w: 1, upsert: true}, (err, result) ->
+      updateElement = (data) ->
+        pubmed.update {_id: data._id}, data, {w: 1, upsert: true}, (err, result) ->
           if err
-            console.log "error", err
-          else
-            console.log "Wrote record", record._id, result
-            writeRecords records, callback
+            console.log "Error", err
+          else 
+            console.log "Written", data._id, result
 
-    extractFile = (xmlDoc, done) ->
-      
-      articles = (buildRecord(article) for article in xmlDoc.find("//MedlineCitation[count(Article/Abstract) > 0]"))
-      writeRecords articles, () ->
-        done()
+      getValue = () ->
+        stringData.join("").trim()
 
-    parseFile = (file, done) ->
+      handleStartElement = (name, attrs) ->
+        stringData = []
+        tagStack.push name
+        startAttributes = attrs
 
-      console.log "Parsing", file
+        if name == 'MedlineCitation'
+          articleData = {}
+          tagStack = []
+          seenArticles = 0
 
-      result = []
+      handleEndElement = (name, attrs) ->
+
+        tagStack.pop()
+
+        if name == 'MedlineCitation' && articleData.abstract?
+          updateElement(articleData)
+        else if name == 'PMID'
+          articleData._id = getValue()
+        else if name == 'Year' && tagStack[tagStack.length - 1] == 'PubDate' && ! articleData.year?
+          articleData.year = getValue()
+        else if name == 'Article'
+          seenArticles++
+        else if name == 'PublicationType'
+          articleData.publicationTypes = [] if ! articleData.publicationTypes?
+          articleData.publicationTypes.push getValue()
+        else if name == 'ArticleTitle' && seenArticles == 0
+          articleData.title = getValue()
+        else if name == 'AbstractText' && tagStack[tagStack.length - 1] == 'Abstract'
+          articleData.abstract = [] if ! articleData.abstract?
+          entry = {text: getValue()}
+          entry.label = startAttributes["Label"] if startAttributes["Label"]?
+          entry.category = startAttributes["NlmCategory"] if startAttributes["NlmCategory"]?
+          articleData.abstract.push entry
+        else if name == 'DescriptorName'
+          meshTerm = {term: getValue(), qualifiers: []}
+        else if name == 'QualifierName'
+          meshTerm.qualifiers.push getValue()
+        else if name  == 'MeshHeading'
+          articleData.meshTerms = [] if ! articleData.meshTerms?
+          articleData.meshTerms.push meshTerm
+        else if name == 'DataBankName'
+          databank = {name: getValue(), accessions: []}
+        else if name == 'AccessionNumber'
+          databank.accessions.push getValue()
+        else if name == 'DataBank'
+          articleData.databanks = [] if ! articleData.databanks?
+          articleData.databanks.push databank
+
+      handleText = (string) ->
+        stringData.push string
+
+      parser = new expat.Parser("UTF-8")
+      parser.addListener 'startElement', handleStartElement
+      parser.addListener 'endElement', handleEndElement
+      parser.addListener 'text', handleText
 
       raw = fs.createReadStream(file)
       gunzip = zlib.createGunzip({chunkSize: 1*1024*1024})
       uncompressed = raw.pipe(gunzip)
 
       uncompressed.on 'data', (chunk) ->
-        result.push chunk.toString()
+        parser.write chunk.toString()
 
       uncompressed.on 'end', () ->
-        xml = result.join("")
-        xmlDoc = libxml.parseXmlString(xml)
-        extractFile xmlDoc, done
-
-    handleFile = (file, done) ->
-      if /\.xml\.gz$/.test(file)
-        parseFile file, done
-      else
+        db.close()
         done()
 
-    walker.walk "#{base}/baseline", handleFile
+handleFile = (file, done) ->
+  if /\.xml\.gz$/.test(file)
+    parseFile file, done
+  else
+    done()
+
+walker.walk "#{base}/medlease", handleFile
