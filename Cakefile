@@ -1,6 +1,7 @@
 # Cakefile
 
-fs            = require 'fs'
+fs         = require 'fs'
+util       = require 'util'
 
 {print} = require 'sys'
 
@@ -12,8 +13,9 @@ REPORTER = "list"
 
 build = (cb) ->
   files = fs.readdirSync 'app/coffee'
-  files = ('app/coffee/' + file for file in files when file.match(/\.(lit)?coffee$/))
-  run ['-c', '-o', 'app/js'].concat(files), cb
+  files = ('app/coffee/' + file for file in files when file.match(/\.(?:lit)?coffee$/))
+  exec 'cp -rf app/coffee/lib app/js/lib', (error, stdout, stderr) ->
+    run ['-c', '-o', 'app/js'].concat(files), cb
 
 run = (args, cb) ->
   proc =         spawn 'coffee', args
