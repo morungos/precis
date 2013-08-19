@@ -1,0 +1,63 @@
+KRAS[Title/Abstract] AND ((clinical[Title/Abstract] AND trial[Title/Abstract]) OR clinical trials[MeSH Terms] OR clinical trial[Publication Type] OR therapeutic use[MeSH Subheading])
+
+#1 - not a trial, 23911227, review paper
+
+#2 - similar to GPS, 23876834
+
+#3 - not a CT, 23868061, "provides the rationale for a phase I clinical trial further investigating the safety and efficacy of this novel strategy"
+
+#4 - relevant, 23857398, KRAS results and conclusions
+
+#5 - not a CT, 23836465, "The proposed subtypes should be further explored retrospectively on existing clinical trial datasets and, when sufficiently robust, be prospectively assessed for clinical relevance in terms of prognosis and treatment response predictive capacity"
+
+#6 - same author/journal as #1, 23819947, review paper
+
+#7 - mainly BRAF, on risk, not a CT, 23800934
+
+#8 - potentially relevant (KRAS only in results), 23790468
+
+#9 - not a CT, 23751074, "These data have implications for both clinical trial designs and therapeutic strategies"
+
+#10 - not a CT, but possibly relevant (KRAS only in results), 23739063, "using a randomized, adjuvant, phase III clinical trial dataset"
+
+#11 - relevant (KRAS in interpretation, methods, title), 23725851
+
+#12 - not a CT, 23714500 "whether in a clinical trial or off protocol"
+
+#13 - not a CT, 23707670, virtually identical to #12
+
+#14 - not a CT, 23698361, doesn't even use term "trial"
+
+#15 - not a CT, 23645765, doesn't use "clinical" or "trial"
+
+#16 - likely relevant, pilot rather than "CT", 23621919 
+
+#17 - not a CT, 23610105, doesn't use "clinical" or "trial", still possibly relevant
+
+#18 - not a CT, 23603816, doesn't use "clinical" or "trial"
+
+#19 - not a CT, 23590467, more mice than humans
+
+#20 - not a CT, design process, Lillian. 
+
+
+Sum of features for refiltering
+
+* "clinical" and "trial"
+* "clinical trial"
+* structured abstract 
+* patients 
+* phase[- ](?:1|2|3|I+)
+* randomized in title/abstract (weak)
+* KRAS other than results
+* terms: enrolled, targeted, treatment, survival, CI, response, administer, mutation(^)
+
+Evidence against
+
+* Research design (mesh)
+* Cells
+* Mouse/mice
+* Non-structured abstract
+* KRAS only in results 
+* Clinical Trials as Topic w/ methods qualifier
+* terms: PCR, FISH
