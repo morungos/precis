@@ -56,6 +56,13 @@ sub process {
       $year_data->{mesh_count}++;      
     }
 
+    if ($element->findvalue('ChemicalList/Chemical/NameOfSubstance[contains(text(), "protein, human")]')) {
+      $data->{protein_count}++;  
+      $year_data->{protein_count}++; 
+    }
+
+    # And now, let's look for gene/protein stuff
+
     last unless $reader->nextElement('MedlineCitation');
   }
 }
@@ -64,7 +71,7 @@ process();
 
 say "";
 
-my @keys = qw(count publication_type_count mesh_count);
+my @keys = qw(count publication_type_count mesh_count protein_count);
 say "\t" . join("\t", @keys);
 foreach my $year (sort keys %{$data->{by_years}}) {
   say $year . "\t" . join("\t", map { $data->{by_years}->{$year}->{$_} // '' } @keys);
