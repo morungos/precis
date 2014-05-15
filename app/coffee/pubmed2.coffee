@@ -5,7 +5,7 @@ util        = require('util')
 
 walker      = require("./walker")
 
-base        = "/Users/swatt/pubmed_xml"
+base        = "/Users/swatt/pubmed_xml/medlease"
 
 
 # memwatch.on 'stats', (stats) ->
@@ -128,7 +128,7 @@ handleFile = (file, done) ->
     else
       done()
   else 
-    emitEnd 'MedlineCitationList'
+    # emitEnd 'MedlineCitationList'
     process.stdout.write "\n"
 
 emitStart 'MedlineCitationList', {}
