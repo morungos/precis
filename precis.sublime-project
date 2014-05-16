@@ -1,14 +1,25 @@
 {
-  "folders":
-  [
-    {
-      "path": ".",
-      "folder_exclude_patterns": ["node_modules"],
-            "file_exclude_patterns": ["*.min.js", "*.sublime-*"]
-    }
-  ],
-  "settings": {
-      "tab_size": 2,
-      "translate_tabs_to_spaces": true
-  }  
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.min.js",
+				"*.sublime-*"
+			],
+			"folder_exclude_patterns":
+			[
+				"node_modules"
+			],
+			"path": "/Users/swatt/git/precis"
+		},
+		{
+			"path": "/Users/swatt/Desktop"
+		}
+	],
+	"settings":
+	{
+		"tab_size": 2,
+		"translate_tabs_to_spaces": true
+	}
 }
