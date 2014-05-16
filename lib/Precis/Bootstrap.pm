@@ -1,4 +1,4 @@
-package Precis::Substantiator;
+package Precis::Bootstrap;
 
 use strict; 
 use warnings;
@@ -10,7 +10,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Precis::Substantiator - Substantiator for the text analyzer
+Precis::Bootstrap - Bootstrap for the text analyzer
 
 =head1 SYNOPSIS
 

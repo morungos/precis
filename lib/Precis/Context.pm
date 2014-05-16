@@ -6,6 +6,13 @@ use warnings;
 use Moo;
 use namespace::clean;
 
+use WordNet::QueryData;
+use Lingua::ENgenomic::Tagger;
+
+use Precis::Predictor;
+use Precis::Substantiator;
+use Precis::SSIDT;
+
 use feature qw(say);
 
 sub BUILD {
@@ -13,6 +20,9 @@ sub BUILD {
   my $wn = WordNet::QueryData->new(verbose => 0, noload => 1);
   my $tagger = Lingua::ENgenomic::Tagger->new();
   $self->{_tools} = {wordnet => $wn, tagger => $tagger};
+  $self->{_predictor} = Precis::Predictor->new();
+  $self->{_substantiator} = Precis::Substantiator->new();  
+  $self->{_ssidt} = Precis::SSIDT->new();  
 }
 
 sub analyze {
@@ -35,6 +45,7 @@ sub analyze_sentence {
 
   foreach my $tagged_word (@tagged_words) {
     my ($word, $tag) = split(qr{/}, $tagged_word);
+
     if ($tag =~ m{^VB}) {
       say $tagged_word;
     }

@@ -6,8 +6,6 @@ use warnings;
 use feature qw(say);
 
 use Text::CSV;
-use WordNet::QueryData;
-use Lingua::ENgenomic::Tagger;
 use Precis::Context;
 
 sub process {
@@ -25,7 +23,7 @@ sub process_file {
     my %data = ();
     @data{@$headers} = @$row;
     my $text = $data{abstract};
-    next unless ($text =~ m{FGFR1});
+    next unless ($text =~ m{EGFR});
     $context->analyze($data{abstract});
     last;
   }

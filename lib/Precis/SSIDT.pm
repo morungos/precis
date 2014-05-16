@@ -1,4 +1,4 @@
-package Precis::Substantiator;
+package Precis::SSIDT;
 
 use strict; 
 use warnings;
@@ -10,7 +10,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Precis::Substantiator - Substantiator for the text analyzer
+Precis::SSIDT - Sketchy script discriminator tree
 
 =head1 SYNOPSIS
 
