@@ -584,7 +584,7 @@ sub _classify_unknown_word {
     } elsif(m/[\)\]\}]/o){ # Right brackets
         $word = "*RRB*";
 
-    } elsif (m/-?(?:\p{IsDigit}+(?:\.\p{IsDigit}*)?|\.\p{IsDigit}+)/){ # Floating point number
+    } elsif (m/^-?(?:\p{IsDigit}+(?:\.\p{IsDigit}*)?|\.\p{IsDigit}+)/){ # Floating point number
         $word = "*NUM*";
 
     } elsif (m/^\p{IsDigit}+[\p{IsDigit}\/:-]+\p{IsDigit}/){ # Other number constructs
