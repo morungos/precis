@@ -1,7 +1,6 @@
 package Precis::Substantiator;
 
-use strict; 
-use warnings;
+use common::sense; 
 
 use Moose::Role;
 

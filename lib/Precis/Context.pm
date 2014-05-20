@@ -1,11 +1,8 @@
 package Precis::Context;
 
-use strict; 
-use warnings;
+use common::sense; 
 
 use Moose;
-
-use feature qw(say);
 
 use WordNet::QueryData;
 use Lingua::ENgenomic::Tagger;
@@ -46,6 +43,9 @@ sub analyze {
 
   $self->tagged_words(\@context_tagged);
   $self->sentence_bounds(\@context_sentences);
+
+  my $targets = $self->get_bootstrap_targets();
+  say $targets;
 }
 
 1;

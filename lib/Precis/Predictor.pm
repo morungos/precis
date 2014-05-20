@@ -1,7 +1,6 @@
 package Precis::Predictor;
 
-use strict; 
-use warnings;
+use common::sense; 
 
 use Moose::Role;
 
