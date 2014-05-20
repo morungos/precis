@@ -1,0 +1,97 @@
+=head1 DESIGN NOTES
+
+Much of the design of Precis comes from several sources:
+
+=over 4
+
+=item *
+
+Mauldin, M. L. (1991) Conceptual Information Retrieval: A Case Study in Adaptive Partial Parsing, Kluwer Academic.
+
+=item *
+
+Hopewell et al. (2008). CONSORT for Reporting Randomized Controlled Trials in Journal and Conference Abstracts: Explanation and Elaboration, PLoS Medicine 5(1), e20.
+
+=back
+
+The basic approach is that of text skimming. There is no real need to parse or analyse the whole text to determine
+relevance. We really want to skim the text with a bunch of questions loosely associated to relevance. These 
+questions include:
+
+=over 4
+
+=item *
+
+Does this text describe a clinical trial? (this is where the CONSORT guidance is useful)
+
+=item *
+
+Does this text describe an in-vitro study? 
+
+=item *
+
+Does the text refer to a gene, or a set of genes?
+
+=item *
+
+Does the text refer to a cancer type?
+
+=item *
+
+Was the trial a controlled prospective study?
+
+=item *
+
+What was the outcome of the study?
+
+=back
+
+Admittedly, we are somewhat distorting the script approach, but we are using the assumption that
+CONSORT more or less forms a script for a clinical trial, and that -- if that script is matched -- 
+the we can fill in the various slots in the composing conceptual dependencies. The question is:
+what are the conceptual dependencies?
+
+=head1 CONCEPTUAL DEPENDENCIES
+
+=head2 ASSAY
+
+Describes an assay conducted, either as part of a clinical trial or as part of an in-vitro
+study. 
+
+Has a set of various slots, some of which might be complex. 
+
+=head2 DESIGN
+
+=head2 OUTCOME
+
+Could include a prognosis, for example. A typical sentence is: "Based on long-term follow-up 
+(average 135 months), a majority (83.5%) of GISTs with PDGFRA mutations followed a benign course."
+
+This could be coded as follows:
+
+    TYPE: OUTCOME
+    OBJECT: MOST <GISTs with PDGFRA mutations>
+    OUTCOME: BENIGN
+
+And another: "RAS appears to be a pejorative prognostic factor in terms of survival in NSCLC globally, 
+in ADC and when it is studied by PCR."
+
+This could be coded as follows:
+
+    TYPE: OUTCOME
+    OBJECT: <NSCLCs with RAS mutations>
+    OUTCOME: POTENTIALLY DAMAGING
+
+and
+
+    TYPE: OUTCOME
+    OBJECT: <ADCs with RAS mutations>
+    OUTCOME: POTENTIALLY DAMAGING
+
+As this shows, a single statement might map to several outcomes, which could even be disjoint. 
+
+=head2 HYPOTHESIS
+
+=head2 RECRUITMENT
+
+=cut
