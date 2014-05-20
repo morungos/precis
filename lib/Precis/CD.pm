@@ -11,6 +11,21 @@ has type => (
 has slots => (
   is => 'rw'
 );
+has notes => (
+  is => 'ro'
+  default => sub { {} }
+);
+
+sub print_object {
+  my ($self, $fh) = @_;
+
+  $fh->say("TYPE: ".$self->type());
+  my $slots = $self->slots();
+  while(my ($key, $value) = each %$slots) {
+    $fh->say("$key: ".$value);
+  }
+  $fh->say();
+}
 
 1;
 
