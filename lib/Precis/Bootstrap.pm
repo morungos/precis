@@ -3,6 +3,8 @@ package Precis::Bootstrap;
 use common::sense; 
 
 use Moose::Role;
+use namespace::autoclean;
+
 use Precis::Linguistics qw(passive_filter);
 
 # A role that provides the get_bootstrap_targets method, which is the main component
@@ -35,6 +37,7 @@ sub get_bootstrap_targets {
       my $tagged_verb = $tagged_words->[$index];
       my ($verb, $tag) = split("/", $tagged_verb);
       my ($form) = $tools->{wordnet}->validForms("$verb"."#v");
+
       say $form;
     }
   }

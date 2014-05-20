@@ -3,6 +3,7 @@ package Precis::CD;
 use common::sense; 
 
 use Moose;
+use namespace::autoclean;
 
 has type => (
   is => 'rw'

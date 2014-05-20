@@ -3,6 +3,7 @@ package Precis::Predictor;
 use common::sense; 
 
 use Moose::Role;
+use namespace::autoclean;
 
 1;
 

@@ -3,6 +3,7 @@ package Precis::Context;
 use common::sense; 
 
 use Moose;
+use namespace::autoclean;
 
 use WordNet::QueryData;
 use Lingua::ENgenomic::Tagger;
