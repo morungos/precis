@@ -22,8 +22,12 @@ sub process_file {
   while (my $row = $csv->getline($fh)) {
     my %data = ();
     @data{@$headers} = @$row;
-    my $text = $data{abstract};
-    $context->analyze($data{abstract});
+    next unless ($data{group} eq '1');
+    my $title = $data{title};
+    my $abstract = $data{abstract};
+    $title .= "." unless ($title =~ m{[\.\?]$});
+    my $text = $title . "\n" . $abstract;
+    $context->analyze($text);
     say "\n\n";
   }
   $csv->eof or $csv->error_diag();
