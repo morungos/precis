@@ -23,9 +23,8 @@ sub process_file {
     my %data = ();
     @data{@$headers} = @$row;
     my $text = $data{abstract};
-    next unless ($text =~ m{EGFR});
     $context->analyze($data{abstract});
-    last;
+    say "\n\n";
   }
   $csv->eof or $csv->error_diag();
   close $fh;

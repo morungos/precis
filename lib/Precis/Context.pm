@@ -44,6 +44,8 @@ sub analyze {
   $self->tagged_words(\@context_tagged);
   $self->sentence_bounds(\@context_sentences);
 
+  say join(" ", @context_tagged). "\n";
+
   my $targets = $self->get_bootstrap_targets();
   say $targets;
 }
