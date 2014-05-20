@@ -18,18 +18,21 @@ has tagged_words => (
 has sentence_bounds => (
   is => 'rw'
 );
+has tools => (
+  is => 'rw'
+);
 
 sub BUILD {
   my ($self) = @_;
   my $wn = WordNet::QueryData->new(verbose => 0, noload => 1);
   my $tagger = Lingua::ENgenomic::Tagger->new();
-  $self->{_tools} = {wordnet => $wn, tagger => $tagger};
+  $self->tools({wordnet => $wn, tagger => $tagger});
 }
 
 sub analyze {
   my ($self, $text) = @_;
 
-  my $tools = $self->{_tools};
+  my $tools = $self->tools();
 
   my $sentences = $tools->{tagger}->get_sentences($text);
   my @context_tagged = ();
