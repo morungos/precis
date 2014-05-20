@@ -3,8 +3,16 @@ package Precis::Bootstrap;
 use strict; 
 use warnings;
 
-use Moo;
-use namespace::clean;
+use Moose::Role;
+
+# A role that provides the get_bootstrap_targets method, which is the main component
+# delivered by the Bootstrap module. 
+
+sub get_bootstrap_targets {
+  my ($self) = @_;
+
+  
+}
 
 1;
 
