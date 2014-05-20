@@ -52,10 +52,15 @@ sub passive_filter {
       return undef;
     }
 
+    # We might have an adverb, it's optional
+    if ($target =~ m{/RB}) {
+      $target = $tokens->[$index++] // return undef;
+    }
+
     # And finally, the next thing should be a verb. If so, we return the 
     # index of the primary verb. If it isn't a verb, return false. 
     if ($target =~ m{^\w+/VB}) {
-      return ($index, $original_index, $index - $original_index);
+      return ($index - 1, $original_index, $index - $original_index);
     } else {
       return undef;
     }
@@ -72,6 +77,11 @@ sub passive_filter {
       $target = $tokens->[$index++] // return undef;
     }
 
+    # We might have an adverb, it's optional
+    if ($target =~ m{/RB}) {
+      $target = $tokens->[$index++] // return undef;
+    }
+
     # The next word could easily be: "been/being". Actually, we require that for had/have/has, because
     # if it isn't, it isn't passive. This mainly affects where we look for related 
     # info. 
@@ -84,7 +94,7 @@ sub passive_filter {
     # And finally, the next thing should be a verb. If so, we return the 
     # index of the primary verb. If it isn't a verb, return false. 
     if ($target =~ m{^\w+/VB}) {
-      return ($index, $original_index, $index - $original_index);
+      return ($index - 1, $original_index, $index - $original_index);
     } else {
       return undef;
     }
