@@ -7,6 +7,7 @@ use namespace::autoclean;
 
 use WordNet::QueryData;
 use Lingua::ENgenomic::Tagger;
+use Lingua::Stem::Snowball;
 
 with 'Precis::Bootstrap';
 with 'Precis::Predictor';
@@ -27,7 +28,8 @@ sub BUILD {
   my ($self) = @_;
   my $wn = WordNet::QueryData->new(verbose => 0, noload => 1);
   my $tagger = Lingua::ENgenomic::Tagger->new();
-  $self->tools({wordnet => $wn, tagger => $tagger});
+  my $stemmer = Lingua::Stem::Snowball->new(lang => 'en');
+  $self->tools({wordnet => $wn, tagger => $tagger, stemmer => $stemmer});
 }
 
 sub analyze {
@@ -51,6 +53,16 @@ sub analyze {
   say join(" ", @context_tagged). "\n";
 
   $self->get_bootstrap_targets();
+}
+
+sub get_valid_form {
+  my ($self, $word) = @_;
+  my $tools = $self->tools();
+  my ($form) = $tools->{wordnet}->validForms($word."#v");
+  if (! defined($form)) {
+    $form = $word."#v";
+  }
+  return $form;
 }
 
 1;

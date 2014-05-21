@@ -8,6 +8,9 @@ use namespace::autoclean;
 use Tree::Range::RB;
 
 use Precis::Linguistics qw(passive_filter);
+use Precis::Data qw(get_bootstrap_frames);
+
+requires 'get_valid_form';
 
 # A role that provides the get_bootstrap_targets method, which is the main component
 # delivered by the Bootstrap module. 
@@ -15,11 +18,12 @@ use Precis::Linguistics qw(passive_filter);
 sub get_bootstrap_targets {
   my ($self) = @_;
 
-  my $tools = $self->tools();
   my $tagged_words = $self->tagged_words();
   my $end = @$tagged_words;
 
   my $nrt = Tree::Range::RB->new({ "cmp" => sub { $_[0] <=> $_[1]; } });
+
+  my $frames = get_bootstrap_frames();
 
   for(my $i = 0; $i < $end; $i++) {
     my ($index, $start, $end) = passive_filter($tagged_words, $i);
@@ -53,11 +57,11 @@ sub get_bootstrap_targets {
   my ($ic) = $nrt->range_iter_closure();
   while ((my ($descriptor, $lower, $upper) = $ic->())) {
     next unless (defined($descriptor));
-    my ($form) = $tools->{wordnet}->validForms($descriptor->{verb}."#v");
+    my $form = $self->get_valid_form($descriptor->{verb});
     $descriptor->{form} = $form;
 
     say "$descriptor->{index}, $descriptor->{end}, $descriptor->{end}, $descriptor->{phrase}, $descriptor->{form}, $descriptor->{tag}";
-    
+
   }
 }
 
