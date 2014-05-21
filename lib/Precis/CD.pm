@@ -9,7 +9,8 @@ has type => (
   is => 'rw'
 );
 has slots => (
-  is => 'rw'
+  is => 'ro',
+  default => sub { {} }
 );
 has notes => (
   is => 'ro'
