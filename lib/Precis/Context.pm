@@ -50,8 +50,7 @@ sub analyze {
 
   say join(" ", @context_tagged). "\n";
 
-  my $targets = $self->get_bootstrap_targets();
-  say $targets;
+  $self->get_bootstrap_targets();
 }
 
 1;

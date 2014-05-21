@@ -60,7 +60,7 @@ sub passive_filter {
     # And finally, the next thing should be a verb. If so, we return the 
     # index of the primary verb. If it isn't a verb, return false. 
     if ($target =~ m{^\w+/VB}) {
-      return ($index - 1, $original_index, $index - $original_index);
+      return ($index - 1, $original_index, $index - 1);
     } else {
       return undef;
     }
@@ -94,7 +94,7 @@ sub passive_filter {
     # And finally, the next thing should be a verb. If so, we return the 
     # index of the primary verb. If it isn't a verb, return false. 
     if ($target =~ m{^\w+/VB}) {
-      return ($index - 1, $original_index, $index - $original_index);
+      return ($index - 1, $original_index, $index - 1);
     } else {
       return undef;
     }

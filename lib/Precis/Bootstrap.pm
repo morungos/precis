@@ -5,6 +5,8 @@ use common::sense;
 use Moose::Role;
 use namespace::autoclean;
 
+use Tree::Range::RB;
+
 use Precis::Linguistics qw(passive_filter);
 
 # A role that provides the get_bootstrap_targets method, which is the main component
@@ -17,29 +19,45 @@ sub get_bootstrap_targets {
   my $tagged_words = $self->tagged_words();
   my $end = @$tagged_words;
 
+  my $nrt = Tree::Range::RB->new({ "cmp" => sub { $_[0] <=> $_[1]; } });
+
+  for(my $i = 0; $i < $end; $i++) {
+    my ($index, $start, $end) = passive_filter($tagged_words, $i);
+    if (defined($index)) {
+      my @words = @$tagged_words[$start .. $end];
+      my $phrase = join(" ", @words);
+
+      my $tagged_verb = $tagged_words->[$index];
+      my ($verb, $tag) = split("/", $tagged_verb);
+
+      $nrt->range_set($start, $end + 1, { phrase => $phrase, verb => $verb, index => $index, start => $start, end => $end, tag => "VBx"});
+
+      $i = $end;
+    }
+  }
+
+
   for(my $i = 0; $i < $end; $i++) {
     my $tagged_word = $tagged_words->[$i];
     if ($tagged_word =~ m{^(\w+)/VB}) {
       my ($word, $tag) = split("/", $tagged_word);
       next if ($tag eq 'VBG');
-      say "$i, $tagged_word";
+
+      my $match = $nrt->get_range($i);
+      if (! $match) {
+        $nrt->range_set($i, $i + 1, { phrase => $word, verb => $word, index => $i, start => $i, end => $i, tag => $tag});
+      }
     }
   }
 
-  for(my $i = 0; $i < $end; $i++) {
-    my ($index, $start, $length) = passive_filter($tagged_words, $i);
-    if (defined($index)) {
-      my @words = @$tagged_words[$start .. ($start + $length - 1)];
-      my $phrase = join(" ", @words);
-      $DB::single = 1;
-      say "$index, $start, $length, $phrase";
+  my ($ic) = $nrt->range_iter_closure();
+  while ((my ($descriptor, $lower, $upper) = $ic->())) {
+    next unless (defined($descriptor));
+    my ($form) = $tools->{wordnet}->validForms($descriptor->{verb}."#v");
+    $descriptor->{form} = $form;
 
-      my $tagged_verb = $tagged_words->[$index];
-      my ($verb, $tag) = split("/", $tagged_verb);
-      my ($form) = $tools->{wordnet}->validForms("$verb"."#v");
-
-      say $form;
-    }
+    say "$descriptor->{index}, $descriptor->{end}, $descriptor->{end}, $descriptor->{phrase}, $descriptor->{form}, $descriptor->{tag}";
+    
   }
 }
 
