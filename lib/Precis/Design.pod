@@ -94,4 +94,38 @@ As this shows, a single statement might map to several outcomes, which could eve
 
 =head2 RECRUITMENT
 
+=head1 CAUSALITY
+
+Notes from: http://www.cs.utexas.edu/~ai-lab/pubs/mooney-ms-thesis.pdf
+
+=over 4
+
+=item precondition
+
+A link between a state and an action it enables.
+
+=item effect
+
+A link between an action and a resulting state.
+
+=item motivation
+
+A link between a volitional action and the beliefs and goals of the actor which motivated them to perform the action.
+
+=item inference
+
+A link between a state and another state that it implies.
+
+=back
+
+To these we add:
+
+=over 4
+
+=item association
+
+A link between a state and another state, without implication one way or the other.
+
+=back
+
 =cut
