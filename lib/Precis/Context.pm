@@ -117,8 +117,10 @@ sub parse {
       return;
     }
 
-    my @modified = $self->predict($frame);
-    $self->queue_frame($_) foreach (@modified);
+    my @requests = $self->predict($frame);
+    foreach my $request (@requests) {
+      $log->debugf("Preduction request: %s", $request);
+    }
   }
 }
 
