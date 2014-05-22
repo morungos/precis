@@ -3,8 +3,10 @@ package Precis::Linguistics;
 use common::sense; 
 
 use Sub::Exporter -setup => {
-  exports => [ qw(passive_filter) ],
+  exports => [ qw(passive_filter get_all_verbs) ],
 };
+
+use Tree::Range::RB;
 
 # my @modal = qw(may might must be being been am are is was were do does did should could would have has had will can shall);
 
@@ -104,6 +106,57 @@ sub passive_filter {
   }
 
   return undef;
+}
+
+sub get_all_verbs {
+  my ($tagged_words) = @_;
+  my $end = @$tagged_words;
+
+  my $nrt = Tree::Range::RB->new({ "cmp" => sub { $_[0] <=> $_[1]; } });
+
+  for(my $i = 0; $i < $end; $i++) {
+    my ($index, $start, $end, $voice) = passive_filter($tagged_words, $i);
+    if (defined($index)) {
+      my @words = @$tagged_words[$start .. $end];
+      my $phrase = join(" ", @words);
+
+      my $tagged_verb = $tagged_words->[$index];
+      my ($verb) = split("/", $tagged_verb);
+
+      # VBS - present passive
+      # VBSP - past passive
+
+      my $tag = "VBS";
+      $tag = "VBSP" if ($voice =~ m{^VB[DN]$});
+
+      $nrt->range_set($start, $end + 1, { phrase => $phrase, verb => $verb, index => $index, start => $start, end => $end, tag => $tag});
+
+      $i = $end;
+    }
+  }
+
+
+  for(my $i = 0; $i < $end; $i++) {
+    my $tagged_word = $tagged_words->[$i];
+    if ($tagged_word =~ m{^(\w+)/VB}) {
+      my ($word, $tag) = split("/", $tagged_word);
+      next if ($tag eq 'VBG');
+
+      my $match = $nrt->get_range($i);
+      if (! $match) {
+        $nrt->range_set($i, $i + 1, { phrase => $word, verb => $word, index => $i, start => $i, end => $i, tag => $tag});
+      }
+    }
+  }
+
+  my @verbs = ();
+  my ($ic) = $nrt->range_iter_closure();
+  while ((my ($descriptor, $lower, $upper) = $ic->())) {
+    next unless (defined($descriptor));
+    push @verbs, $descriptor;
+  }
+
+  return @verbs;
 }
 
 1;

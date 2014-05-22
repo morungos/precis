@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 use Tree::Range::RB;
 
-use Precis::Linguistics qw(passive_filter);
+use Precis::Linguistics qw(get_all_verbs);
 use Precis::Data qw(find_bootstrap_cd);
 
 requires 'get_valid_form';
@@ -19,49 +19,10 @@ sub get_bootstrap_targets {
   my ($self) = @_;
 
   my $tagged_words = $self->tagged_words();
-  my $end = @$tagged_words;
-
-  my $nrt = Tree::Range::RB->new({ "cmp" => sub { $_[0] <=> $_[1]; } });
-
-  for(my $i = 0; $i < $end; $i++) {
-    my ($index, $start, $end, $voice) = passive_filter($tagged_words, $i);
-    if (defined($index)) {
-      my @words = @$tagged_words[$start .. $end];
-      my $phrase = join(" ", @words);
-
-      my $tagged_verb = $tagged_words->[$index];
-      my ($verb) = split("/", $tagged_verb);
-
-      # VBS - present passive
-      # VBSP - past passive
-
-      my $tag = "VBS";
-      $tag = "VBSP" if ($voice =~ m{^VB[DN]$});
-
-      $nrt->range_set($start, $end + 1, { phrase => $phrase, verb => $verb, index => $index, start => $start, end => $end, tag => $tag});
-
-      $i = $end;
-    }
-  }
-
-
-  for(my $i = 0; $i < $end; $i++) {
-    my $tagged_word = $tagged_words->[$i];
-    if ($tagged_word =~ m{^(\w+)/VB}) {
-      my ($word, $tag) = split("/", $tagged_word);
-      next if ($tag eq 'VBG');
-
-      my $match = $nrt->get_range($i);
-      if (! $match) {
-        $nrt->range_set($i, $i + 1, { phrase => $word, verb => $word, index => $i, start => $i, end => $i, tag => $tag});
-      }
-    }
-  }
+  my @verbs = get_all_verbs($tagged_words);
 
   my @cds = ();
-  my ($ic) = $nrt->range_iter_closure();
-  while ((my ($descriptor, $lower, $upper) = $ic->())) {
-    next unless (defined($descriptor));
+  foreach my $descriptor (@verbs) {
     my $form = $self->get_valid_form($descriptor->{verb});
     my $index = $descriptor->{index};
     $descriptor->{form} = $form;
