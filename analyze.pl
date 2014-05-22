@@ -8,6 +8,15 @@ use feature qw(say);
 use Text::CSV;
 use Precis::Context;
 
+# use Log::Log4perl;
+# use Log::Any::Adapter;
+
+# Log::Log4perl::init('log4perl.conf');
+# Log::Any::Adapter->set('Log4perl');
+use Log::Any::Adapter('Stdout');
+
+use Log::Any qw($log);
+
 sub process {
   my $context = Precis::Context->new();
   process_file($context, "data/sources.csv");
@@ -28,7 +37,7 @@ sub process_file {
     $title .= "." unless ($title =~ m{[\.\?]$});
     my $text = $title . "\n" . $abstract;
     $context->analyze($text);
-    say "\n\n";
+    $log->debug("Analysed");
   }
   $csv->eof or $csv->error_diag();
   close $fh;

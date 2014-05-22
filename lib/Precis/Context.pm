@@ -10,6 +10,8 @@ use WordNet::QueryData;
 use Lingua::ENgenomic::Tagger;
 use Lingua::Stem::Snowball;
 
+use Log::Any qw($log);
+
 with 'Precis::Bootstrap';
 with 'Precis::Predictor';
 with 'Precis::Substantiator';
@@ -55,10 +57,9 @@ sub analyze {
   $self->tagged_words(\@context_tagged);
   $self->sentence_bounds(\@context_sentences);
 
-  say join(" ", @context_tagged). "\n";
+  $log->debug("Abstract: " . join(" ", @context_tagged));
 
   $self->parse();
-
   return;
 }
 
@@ -94,9 +95,7 @@ sub print_queue {
     say "Frame: $frame_number";
     $queued->print_object(\*STDOUT);
     $frame_number++;
-    say "";
   }
-  $DB::single = 1 if (@$queue);
   return;
 }
 
@@ -113,7 +112,7 @@ sub parse {
   while(my $frame = $self->unqueue_frame()) {
     assert($frame);
     if ($frame->is_complete()) {
-      say "Parse complete";
+      $log->debug("Parse complete");
       $frame->print_object(\*STDOUT);
       return;
     }
