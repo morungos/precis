@@ -5,6 +5,7 @@ use common::sense;
 use Moose;
 use namespace::autoclean;
 
+use Carp::Assert;
 use WordNet::QueryData;
 use Lingua::ENgenomic::Tagger;
 use Lingua::Stem::Snowball;
@@ -56,17 +57,8 @@ sub analyze {
 
   say join(" ", @context_tagged). "\n";
 
-  $self->get_bootstrap_targets();
+  $self->parse();
 
-  my $frame_number = 1;
-  my @queue = @{$self->queue()};
-  foreach my $queued (@queue) {
-    say "Frame: $frame_number";
-    $queued->print_object(\*STDOUT);
-    $frame_number++;
-    say "";
-  }
-  $DB::single = 1 if (@queue);
   return;
 }
 
@@ -85,9 +77,50 @@ sub queue_frame {
   push @{$self->queue()}, $frame;
 }
 
+sub unqueue_frame {
+  my ($self) = @_;
+  return shift @{$self->queue()};
+}
+
 sub clear_queue_frames {
   my ($self) = @_;
   $self->queue([]);
+}
+
+sub print_queue {
+  my ($self, $queue) = @_;
+  my $frame_number = 1;
+  foreach my $queued (@$queue) {
+    say "Frame: $frame_number";
+    $queued->print_object(\*STDOUT);
+    $frame_number++;
+    say "";
+  }
+  $DB::single = 1 if (@$queue);
+  return;
+}
+
+# The core of teh parser. It works as described on p74 of the Mauldin book. 
+sub parse {
+  my ($self) = @_;
+
+  my $queue = $self->queue();
+  $self->get_bootstrap_targets();
+  return undef if (! @$queue);
+
+  $self->print_queue($queue);
+
+  while(my $frame = $self->unqueue_frame()) {
+    assert($frame);
+    if ($frame->is_complete()) {
+      say "Parse complete";
+      $frame->print_object(\*STDOUT);
+      return;
+    }
+
+    my @modified = $self->predict($frame);
+    $self->queue_frame($_) foreach (@modified);
+  }
 }
 
 1;

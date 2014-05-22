@@ -5,6 +5,8 @@ use common::sense;
 use Moose;
 use namespace::autoclean;
 
+use List::MoreUtils qw(all);
+
 has cds => (
   is => 'rw',
   default => sub { [] }
@@ -26,6 +28,11 @@ sub add_cd {
   my $cds = $self->cds();
   push @$cds, $cd;
   return $cd;
+}
+
+sub is_complete {
+  my ($self) = @_;
+  return all { $_->is_complete() } @{$self->cds()};
 }
 
 1;
