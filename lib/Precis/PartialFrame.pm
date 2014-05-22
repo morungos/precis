@@ -9,9 +9,6 @@ has cds => (
   is => 'rw',
   default => sub { [] }
 );
-has current_cd_index => (
-  is => 'rw'
-);
 
 sub print_object {
   my ($self, $fh) = @_;
@@ -22,17 +19,12 @@ sub print_object {
     $fh->print("$index. ");
     $cd->print_object($fh);
   }
-
-  if ($index) {
-    $fh->say("Current CD index: " . $self->current_cd_index() . "\n");
-  }
 }
 
 sub add_cd {
   my ($self, $cd) = @_;
   my $cds = $self->cds();
   push @$cds, $cd;
-  $self->current_cd_index($#$cds);
   return $cd;
 }
 

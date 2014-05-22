@@ -16,11 +16,16 @@ has notes => (
   is => 'ro',
   default => sub { {} }
 );
+has is_complete => (
+  is => 'rw',
+  default => sub { 0 }
+);
+
 
 sub print_object {
   my ($self, $fh) = @_;
 
-  $fh->say("TYPE: ".$self->type());
+  $fh->say("TYPE: ".$self->type()." ".($self->is_complete() ? "(complete)" : "(incomplete)"));
   my $slots = $self->slots();
   foreach my $key (sort keys %$slots) {
     $fh->say("   $key: ".$slots->{$key});

@@ -23,6 +23,9 @@ has sentence_bounds => (
 has tools => (
   is => 'rw'
 );
+has queue => (
+  is => 'rw'
+);
 
 sub BUILD {
   my ($self) = @_;
@@ -36,6 +39,7 @@ sub analyze {
   my ($self, $text) = @_;
 
   my $tools = $self->tools();
+  $self->clear_queue_frames();
 
   my $sentences = $tools->{tagger}->get_sentences($text);
   my @context_tagged = ();
@@ -53,6 +57,17 @@ sub analyze {
   say join(" ", @context_tagged). "\n";
 
   $self->get_bootstrap_targets();
+
+  my $frame_number = 1;
+  my @queue = @{$self->queue()};
+  foreach my $queued (@queue) {
+    say "Frame: $frame_number";
+    $queued->print_object(\*STDOUT);
+    $frame_number++;
+    say "";
+  }
+  $DB::single = 1 if (@queue);
+  return;
 }
 
 sub get_valid_form {
@@ -63,6 +78,16 @@ sub get_valid_form {
     $form = $word."#v";
   }
   return $form;
+}
+
+sub queue_frame {
+  my ($self, $frame) = @_;
+  push @{$self->queue()}, $frame;
+}
+
+sub clear_queue_frames {
+  my ($self) = @_;
+  $self->queue([]);
 }
 
 1;

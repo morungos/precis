@@ -8,7 +8,7 @@ use namespace::autoclean;
 use Tree::Range::RB;
 
 use Precis::Linguistics qw(passive_filter);
-use Precis::Data qw(find_bootstrap_frame);
+use Precis::Data qw(find_bootstrap_cd);
 
 requires 'get_valid_form';
 
@@ -58,6 +58,7 @@ sub get_bootstrap_targets {
     }
   }
 
+  my @cds = ();
   my ($ic) = $nrt->range_iter_closure();
   while ((my ($descriptor, $lower, $upper) = $ic->())) {
     next unless (defined($descriptor));
@@ -65,10 +66,14 @@ sub get_bootstrap_targets {
     my $index = $descriptor->{index};
     $descriptor->{form} = $form;
 
-    my $frame = find_bootstrap_frame($self, $form, $index, $descriptor) // next;
-    $frame->print_object(\*STDOUT);
-    $DB::single = 1;
-    next;
+    my $cd = find_bootstrap_cd($self, $form, $index, $descriptor) // next;
+    push @cds, $cd;
+  }
+
+  foreach my $cd (@cds) {
+    my $frame = Precis::PartialFrame->new();
+    $frame->add_cd($cd);
+    $self->queue_frame($frame);
   }
 }
 
