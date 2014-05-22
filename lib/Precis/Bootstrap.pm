@@ -24,15 +24,21 @@ sub get_bootstrap_targets {
   my $nrt = Tree::Range::RB->new({ "cmp" => sub { $_[0] <=> $_[1]; } });
 
   for(my $i = 0; $i < $end; $i++) {
-    my ($index, $start, $end) = passive_filter($tagged_words, $i);
+    my ($index, $start, $end, $voice) = passive_filter($tagged_words, $i);
     if (defined($index)) {
       my @words = @$tagged_words[$start .. $end];
       my $phrase = join(" ", @words);
 
       my $tagged_verb = $tagged_words->[$index];
-      my ($verb, $tag) = split("/", $tagged_verb);
+      my ($verb) = split("/", $tagged_verb);
 
-      $nrt->range_set($start, $end + 1, { phrase => $phrase, verb => $verb, index => $index, start => $start, end => $end, tag => "VBx"});
+      # VBS - present passive
+      # VBSP - past passive
+
+      my $tag = "VBS";
+      $tag = "VBSP" if ($voice =~ m{^VB[DN]$});
+
+      $nrt->range_set($start, $end + 1, { phrase => $phrase, verb => $verb, index => $index, start => $start, end => $end, tag => $tag});
 
       $i = $end;
     }

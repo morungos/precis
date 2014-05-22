@@ -30,6 +30,7 @@ sub passive_filter {
   my $target = $tokens->[$index++] // return undef;
 
   if ($target =~ m{^(?:may|might|must|do|does|did|should|could|would|will|can|shall)/}) {
+    my $auxiliary = $target;
     $target = $tokens->[$index++] // return undef;
 
     # If there's a not in there, we can legitimately skip it. We probably ought to 
@@ -60,7 +61,8 @@ sub passive_filter {
     # And finally, the next thing should be a verb. If so, we return the 
     # index of the primary verb. If it isn't a verb, return false. 
     if ($target =~ m{^\w+/VB}) {
-      return ($index - 1, $original_index, $index - 1);
+      my ($voice) = ($auxiliary =~ m{/(\w+)});
+      return ($index - 1, $original_index, $index - 1, $voice);
     } else {
       return undef;
     }
@@ -94,7 +96,8 @@ sub passive_filter {
     # And finally, the next thing should be a verb. If so, we return the 
     # index of the primary verb. If it isn't a verb, return false. 
     if ($target =~ m{^\w+/VB}) {
-      return ($index - 1, $original_index, $index - 1);
+      my ($voice) = ($auxiliary =~ m{/(\w+)});
+      return ($index - 1, $original_index, $index - 1, $voice);
     } else {
       return undef;
     }
