@@ -13,7 +13,7 @@ has slots => (
   default => sub { {} }
 );
 has notes => (
-  is => 'ro'
+  is => 'ro',
   default => sub { {} }
 );
 
@@ -22,10 +22,13 @@ sub print_object {
 
   $fh->say("TYPE: ".$self->type());
   my $slots = $self->slots();
-  while(my ($key, $value) = each %$slots) {
-    $fh->say("$key: ".$value);
+  foreach my $key (sort keys %$slots) {
+    $fh->say("   $key: ".$slots->{$key});
   }
-  $fh->say();
+  my $notes = $self->notes();
+  foreach my $key (sort keys %$notes) {
+    $fh->say("  &$key: ".$notes->{$key});
+  }
 }
 
 1;

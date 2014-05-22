@@ -6,9 +6,10 @@ use Moose;
 use namespace::autoclean;
 
 has cds => (
-  is => 'rw'
+  is => 'rw',
+  default => sub { [] }
 );
-has focus_index => (
+has current_cd_index => (
   is => 'rw'
 );
 
@@ -17,11 +18,22 @@ sub print_object {
 
   my $index = 0;
   foreach my $cd (@{$self->cds()}) {
+    $index++;
     $fh->print("$index. ");
     $cd->print_object($fh);
   }
 
-  $fh->say("Focus index: " . $self->focus_index());
+  if ($index) {
+    $fh->say("Current CD index: " . $self->current_cd_index() . "\n");
+  }
+}
+
+sub add_cd {
+  my ($self, $cd) = @_;
+  my $cds = $self->cds();
+  push @$cds, $cd;
+  $self->current_cd_index($#$cds);
+  return $cd;
 }
 
 1;

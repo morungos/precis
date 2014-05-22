@@ -8,7 +8,7 @@ use namespace::autoclean;
 use Tree::Range::RB;
 
 use Precis::Linguistics qw(passive_filter);
-use Precis::Data qw(get_bootstrap_frames);
+use Precis::Data qw(find_bootstrap_frame);
 
 requires 'get_valid_form';
 
@@ -22,8 +22,6 @@ sub get_bootstrap_targets {
   my $end = @$tagged_words;
 
   my $nrt = Tree::Range::RB->new({ "cmp" => sub { $_[0] <=> $_[1]; } });
-
-  my $frames = get_bootstrap_frames();
 
   for(my $i = 0; $i < $end; $i++) {
     my ($index, $start, $end) = passive_filter($tagged_words, $i);
@@ -58,10 +56,13 @@ sub get_bootstrap_targets {
   while ((my ($descriptor, $lower, $upper) = $ic->())) {
     next unless (defined($descriptor));
     my $form = $self->get_valid_form($descriptor->{verb});
+    my $index = $descriptor->{index};
     $descriptor->{form} = $form;
 
-    say "$descriptor->{index}, $descriptor->{end}, $descriptor->{end}, $descriptor->{phrase}, $descriptor->{form}, $descriptor->{tag}";
-
+    my $frame = find_bootstrap_frame($self, $form, $index, $descriptor) // next;
+    $frame->print_object(\*STDOUT);
+    $DB::single = 1;
+    next;
   }
 }
 
