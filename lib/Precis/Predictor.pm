@@ -8,10 +8,14 @@ use List::MoreUtils qw(first_index);
 
 use Log::Any qw($log);
 
+use Precis::SSIDT;
+
 sub predict {
   my ($self, $partial) = @_;
 
-  $log->debug("Calling predictor");
+  my $ssidt = Precis::SSIDT->instance();
+
+  $log->debug("Calling predictor; SSIDT: $ssidt");
 
   # When we have a partial structure, we need to look at what do next. 
   # First of all, get the current CDs

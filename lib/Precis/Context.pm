@@ -15,7 +15,6 @@ use Log::Any qw($log);
 with 'Precis::Bootstrap';
 with 'Precis::Predictor';
 with 'Precis::Substantiator';
-with 'Precis::SSIDT';
 
 has tagged_words => (
   is => 'rw'
@@ -121,6 +120,8 @@ sub parse {
     foreach my $request (@requests) {
       $log->debugf("Preduction request: %s", $request);
     }
+
+    # When we get these requests, we need to pass them into the substantiator.  
   }
 }
 
