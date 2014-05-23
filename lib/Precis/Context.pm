@@ -93,7 +93,7 @@ sub print_queue {
   my $frame_number = 1;
   foreach my $queued (@$queue) {
     say "Frame: $frame_number";
-    $queued->print_object(\*STDOUT);
+    say $queued->to_string();
     $frame_number++;
   }
   return;

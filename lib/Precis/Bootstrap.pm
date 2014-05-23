@@ -10,6 +10,8 @@ use List::MoreUtils qw(indexes);
 use Precis::Linguistics qw(get_all_verbs);
 use Precis::Data qw(find_bootstrap_cd);
 
+use Precis::CD::Trial;
+
 requires 'get_valid_form';
 
 # A role that provides the get_bootstrap_targets method, which is the main component
@@ -32,12 +34,12 @@ sub get_bootstrap_targets {
     my $tagged_word = $tagged_words->[$index];
     my ($word, $tag) = split("/", $tagged_word);
     my $descriptor = { phrase => $word, noun => $word, index => $index, start => $index, end => $index, tag => $tag};
-    my $cd = Precis::CD->new({type => 'TRIAL', notes => $descriptor});
-    my $slots = $cd->slots();
-    $slots->{RANDOMIZED} = {type => '*boolean'};
-    $slots->{PHASE} = {type => '*phase'};
-    $slots->{HYPOTHESIS} = {type => '*hypothesis'};
-    $slots->{OUTCOME} = {type => '*outcome'};
+    my $cd = Precis::CD::Trial->new({type => 'TRIAL', notes => $descriptor});
+    $cd->randomized()->role('boolean');
+    $cd->phase()->role('phase');
+    $cd->hypothesis()->role('hypothesis');
+    $cd->outcome()->role('outcome');
+    
     my $frame = Precis::PartialFrame->new();
     $frame->add_cd($cd);
     $self->queue_frame($frame);

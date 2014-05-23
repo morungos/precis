@@ -33,8 +33,9 @@ sub predict {
 
   # Rule: if we're a clinical trial and we don;t yet have a value for whether it's randomized,
   # let's queue a substantiation for that. 
-  if ($target->{type} eq 'TRIAL' && ! exists($target->slots()->{RANDOMIZED}->{value})) {
-    push @requests, {dependency_index => $target_index, slot => 'RANDOMIZED'};
+
+  if ($target->isa('Precis::CD::Trial') && ! $target->randomized()->has_value()) {
+    push @requests, {dependency_index => $target_index, slot => 'randomized'};
   }
 
   # Okay, so we do have a target CD, and it isn't marked as complete. So we can

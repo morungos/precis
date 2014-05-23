@@ -12,15 +12,17 @@ has cds => (
   default => sub { [] }
 );
 
-sub print_object {
-  my ($self, $fh) = @_;
+sub to_string {
+  my ($self) = @_;
 
+  my @result = ();
   my $index = 0;
   foreach my $cd (@{$self->cds()}) {
     $index++;
-    $fh->print("$index. ");
-    $cd->print_object($fh);
+    push @result, "$index. ";
+    push @result, $cd->to_string();
   }
+  return join("", @result);
 }
 
 sub add_cd {
