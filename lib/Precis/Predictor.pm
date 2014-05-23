@@ -31,7 +31,7 @@ sub predict {
 
   my $target = $cds->[$target_index];
 
-  # Rule: if we're a clinical trial and we don;t yet have a value for whether it's randomized,
+  # Rule: if we're a clinical trial and we don't yet have a value for whether it's randomized,
   # let's queue a substantiation for that. 
 
   if ($target->isa('Precis::CD::Trial') && ! $target->randomized()->has_value()) {
