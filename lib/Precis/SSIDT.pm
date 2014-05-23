@@ -44,6 +44,18 @@ sub initialize_frame {
     load $class;
     my $cd = $class->new();
     $partial->add_cd($cd);
+
+    delete($cd_data->{TYPE});
+    my $meta = $cd->meta();
+    foreach my $slot (keys %$cd_data) {
+      my $attribute = $meta->find_attribute_by_name($slot);
+      my $slot_object = $attribute->get_value($cd);
+      my $values = $cd_data->{$slot};
+      foreach my $data_key (keys %$values) {
+        my $data_value = $values->{$data_key};
+        $slot_object->$data_key($data_value);
+      }
+    }
   }
 
   return $partial;

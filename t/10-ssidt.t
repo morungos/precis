@@ -1,6 +1,6 @@
 use common::sense;
 
-use Test::Most 'die', tests => 8;
+use Test::Most 'die', tests => 12;
 use Precis::SSIDT;
 
 my $ssidt = Precis::SSIDT->new();
@@ -31,5 +31,11 @@ my @slots = $cds[0]->get_slot_attribute_names();
 is(scalar @slots, 4, "Found four slots");
 
 is_deeply(\@slots, ["randomized", "phase", "hypothesis", "outcome"], "Checked proper slot names");
+
+# The roles for these should also be set right
+is($cds[0]->randomized()->role(), "*boolean*", "Checked role for slot: randomized");
+is($cds[0]->phase()->role(), "*phase*", "Checked role for slot: phase");
+is($cds[0]->hypothesis()->role(), "*hypothesis*", "Checked role for slot: hypothesis");
+is($cds[0]->outcome()->role(), "*outcome*", "Checked role for slot: outcome");
 
 done_testing();
