@@ -27,8 +27,9 @@ sub initialize_with_yaml {
   my ($self, $source) = @_;
   my $data = LoadFile($source);
 
+  $DB::single = 1;
   foreach (@$data) {
-    push @{$self->scripts()}, initialize_frame($_)
+    push @{$self->scripts()}, $self->initialize_frame($_)
   }
 }
 
@@ -42,7 +43,7 @@ sub initialize_frame {
     my $class = $cd_data->{TYPE};
     load $class;
     my $cd = $class->new();
-
+    $partial->add_cd($cd);
   }
 
   return $partial;
