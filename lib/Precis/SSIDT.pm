@@ -66,6 +66,32 @@ sub initialize_frame {
   return $partial;
 }
 
+# Navigation routines, wich are exposed mainly so that the predictor can make
+# sense of some of the internal encoding that we use. 
+
+sub find_discriminators {
+  my ($self, $cd) = @_;
+  my $class = $cd->meta()->name();
+  my $tree = $self->tree();
+  my @slots = $cd->get_slot_attributes();
+  my @tests = ("class:$class");
+  foreach my $slot (@slots) {
+    my $slot_name = $slot->name();
+    my $slot_value = $slot->get_value($cd);
+    last if (! $slot_value->is_complete());
+    my $role_value = $slot_value->role();
+    push @tests, "slot:$slot_name:$role_value";
+  }
+  foreach my $test (@tests) {
+    if (exists($tree->{$test})) {
+      $tree = $tree->{$test};
+    } else {
+      return ();
+    }
+  }
+  return keys %$tree;
+}
+
 # Routines for compiling the scripts into the SSIDT, so we can then work
 # through the tree in the predictor.
 
