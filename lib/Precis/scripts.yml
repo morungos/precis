@@ -1,0 +1,13 @@
+---
+
+- name: 'trial1'
+  cds:
+    - TYPE: 'Precis::CD::Trial'
+      randomized: 
+        role: '*boolean*'
+      phase: 
+        role: '*phase*'
+      hypothesis: 
+        role: '*hypothesis*'
+      outcome: 
+        role: '*outcome*'
