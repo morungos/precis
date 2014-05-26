@@ -108,10 +108,14 @@ sub parse {
 
     my @requests = $self->predict($frame);
     foreach my $request (@requests) {
-      $log->debugf("Preduction request: %s", $request);
+      
+      # When we get these requests, we need to pass them into the substantiator.  
+      # If we have a result, we should queue the new frame. If we don't get a response,
+      # we can simply drop the frame. 
+      if (my $modified_frame = $self->substantiate($frame, $request)) {
+        $self->queue_frame($modified_frame);
+      }
     }
-
-    # When we get these requests, we need to pass them into the substantiator.  
   }
 }
 
