@@ -6,7 +6,7 @@ use MooseX::ClassCompositor;
 use Precis::Predictor;
 
 use Precis::CD::Trial;
-use Precis::PartialFrame;
+use Precis::MOP;
 
 # Test a role: see: http://www.perlmonks.org/?node_id=918837
 my $class = MooseX::ClassCompositor->new({ class_basename => 'Test' })->class_for( 'Precis::Predictor' );
@@ -20,7 +20,7 @@ $cd->phase()->role('phase');
 $cd->hypothesis()->role('hypothesis');
 $cd->outcome()->role('outcome');
 
-my $frame = Precis::PartialFrame->new();
+my $frame = Precis::MOP->new();
 $frame->add_cd($cd);
 
 my @result = $instance->predict($frame);

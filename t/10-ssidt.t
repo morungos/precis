@@ -12,9 +12,9 @@ ok($ssidt, "Instantiated a value");
 my $scripts = $ssidt->scripts();
 ok($scripts, "Found some scripts");
 
-subtest 'Check all scripts are Precis::PartialFrame' => sub { 
+subtest 'Check all scripts are Precis::MOP' => sub { 
   foreach my $frame (@$scripts) {
-    isa_ok($frame, 'Precis::PartialFrame');
+    isa_ok($frame, 'Precis::MOP');
   }
 };
 

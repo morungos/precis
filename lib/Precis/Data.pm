@@ -6,7 +6,7 @@ use Sub::Exporter -setup => {
   exports => [ qw(find_bootstrap_cd) ],
 };
 
-use Precis::PartialFrame;
+use Precis::MOP;
 
 # Much of the data here is really about what should be considered an inclusive form
 # for the data we are looking for, and where's the evidence. As such, it's largely about

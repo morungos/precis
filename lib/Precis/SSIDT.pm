@@ -5,7 +5,7 @@ use common::sense;
 use MooseX::Singleton;
 use namespace::autoclean;
 
-use Precis::PartialFrame;
+use Precis::MOP;
 
 use YAML qw(LoadFile);
 use File::Spec;
@@ -42,7 +42,7 @@ sub initialize_frame {
   my ($self, $frame_data) = @_;
 
   my $name = $frame_data->{name};
-  my $partial = Precis::PartialFrame->new();
+  my $partial = Precis::MOP->new();
 
   foreach my $cd_data (@{$frame_data->{cds}}) {
     my $class = $cd_data->{TYPE};

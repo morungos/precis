@@ -39,8 +39,8 @@ sub get_bootstrap_targets {
     $cd->phase()->role('phase');
     $cd->hypothesis()->role('hypothesis');
     $cd->outcome()->role('outcome');
-    
-    my $frame = Precis::PartialFrame->new();
+
+    my $frame = Precis::MOP->new();
     $frame->add_cd($cd);
     $self->queue_frame($frame);
   }

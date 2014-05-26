@@ -1,4 +1,4 @@
-package Precis::PartialFrame;
+package Precis::MOP;
 
 use common::sense; 
 
@@ -41,7 +41,7 @@ sub is_complete {
 
 =head1 NAME
 
-Precis::PartialFrame - A partial conceptual dependency graph frame
+Precis::MOP - A conceptual dependency MOP
 
 =head1 SYNOPSIS
 
