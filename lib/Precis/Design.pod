@@ -6,6 +6,10 @@ Much of the design of Precis comes from several sources:
 
 =item *
 
+Lebowitz, M. (1983) Memory-based parsing. Artificial Intelligence, 21(4), 363–404.
+
+=item *
+
 Mauldin, M. L. (1991) Conceptual Information Retrieval: A Case Study in Adaptive Partial Parsing, Kluwer Academic.
 
 =item *
