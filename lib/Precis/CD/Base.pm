@@ -5,14 +5,11 @@ use common::sense;
 use Moose::Role;
 use namespace::autoclean;
 
+use List::MoreUtils qw(all);
+
 has notes => (
   is => 'ro',
   default => sub { {} }
-);
-
-has is_complete => (
-  is => 'rw',
-  default => sub { 0 }
 );
 
 sub to_string {
@@ -45,6 +42,12 @@ sub get_slot_attributes {
 sub get_slot_attribute_names {
   my ($self) = @_;
   return map { $_->name() } $self->get_slot_attributes();
+}
+
+sub is_complete {
+  my ($self) = @_;
+  my @attributes = $self->get_slot_attributes();
+  return all { $_->get_value($self)->is_complete() } @attributes;
 }
 
 1;
