@@ -4,6 +4,8 @@ use common::sense;
 
 use Moose::Role;
 use namespace::autoclean;
+
+use Carp;
 use List::MoreUtils qw(first_index);
 
 use Log::Any qw($log);
@@ -33,17 +35,19 @@ sub predict {
     return @requests;
   }
 
-  my $target = $cds->[$target_index];
-
-  # Rule: if we're a clinical trial and we don't yet have a value for whether it's randomized,
-  # let's queue a substantiation for that. 
-
-  if ($target->isa('Precis::CD::Trial') && ! $target->randomized()->has_value()) {
-    push @requests, {dependency_index => $target_index, slot => 'randomized'};
-  }
-
   # Okay, so we do have a target CD, and it isn't marked as complete. So we can
   # predict some expansions, and where to look for them. 
+
+  my $target = $cds->[$target_index];
+  my @discriminators = $ssidt->find_discriminators($target);
+
+  foreach my $discriminator (@discriminators) {
+    if ($discriminator =~ m{^slot:(\w+):(.*)}) {
+      push @requests, {dependency_index => $target_index, slot => $1, filler => $2};
+    } else {
+      croak "Can't handle discriminator: $discriminator";
+    }
+  }
 
   return @requests;
 }
