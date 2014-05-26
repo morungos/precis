@@ -6,9 +6,6 @@ use Moose;
 use namespace::autoclean;
 
 use Carp::Assert;
-use WordNet::QueryData;
-use Lingua::ENgenomic::Tagger;
-use Lingua::Stem::Snowball;
 
 use Log::Any qw($log);
 
