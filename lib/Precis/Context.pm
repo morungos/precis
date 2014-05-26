@@ -12,6 +12,7 @@ use Lingua::Stem::Snowball;
 
 use Log::Any qw($log);
 
+with 'Precis::LanguageTools';
 with 'Precis::Bootstrap';
 with 'Precis::Predictor';
 with 'Precis::Substantiator';
@@ -22,20 +23,9 @@ has tagged_words => (
 has sentence_bounds => (
   is => 'rw'
 );
-has tools => (
-  is => 'rw'
-);
 has queue => (
   is => 'rw'
 );
-
-sub BUILD {
-  my ($self) = @_;
-  my $wn = WordNet::QueryData->new(verbose => 0, noload => 1);
-  my $tagger = Lingua::ENgenomic::Tagger->new();
-  my $stemmer = Lingua::Stem::Snowball->new(lang => 'en');
-  $self->tools({wordnet => $wn, tagger => $tagger, stemmer => $stemmer});
-}
 
 sub analyze {
   my ($self, $text) = @_;
