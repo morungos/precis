@@ -18,11 +18,14 @@ my $DOMAIN = {
 
 my $special_tokens = {
   "have"    => 'function_word',
+  "has"     => 'function_word',
   "is"      => 'function_word',
+  "are"     => 'function_word',
   "was"     => 'function_word',
   "been"    => 'function_word',
   "being"   => 'function_word',
   "not"     => 'function_word',
+  "were"    => 'function_word',
 };
 
 my $types = {
@@ -56,9 +59,9 @@ my $types = {
   JJR  => 'token_refiner',
   CD   => 'token_refiner',
 
-  RB   => 'event_modifier',
-  RBR  => 'event_modifier',
-  RBS  => 'event_modifier',
+  RB   => 'event_refiner',
+  RBR  => 'event_refiner',
+  RBS  => 'event_refiner',
 
   PP   => 'non_word',
   PPC  => 'non_word',
