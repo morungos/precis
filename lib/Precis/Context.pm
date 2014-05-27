@@ -6,6 +6,7 @@ use Moose;
 use namespace::autoclean;
 
 use Carp::Assert;
+use List::MoreUtils qw(first_index);
 
 use Log::Any qw($log);
 
@@ -15,13 +16,16 @@ with 'Precis::Substantiator';
 with 'Precis::LexicalClassifier';
 
 has tagged_words => (
-  is => 'rw'
+  is => 'rw',
+);
+has token_index => (
+  is => 'rw',
 );
 has sentence_bounds => (
-  is => 'rw'
+  is => 'rw',
 );
-has queue => (
-  is => 'rw'
+has expectations => (
+  is => 'rw',
 );
 
 sub analyze {
@@ -39,8 +43,11 @@ sub analyze {
     push @context_tagged, @tagged_sentence;
   }
 
+  # Initialize the context
   $self->tagged_words(\@context_tagged);
+  $self->token_index(0);
   $self->sentence_bounds(\@context_sentences);
+  $self->expectations([]);
 
   $log->debug("Abstract: " . join(" ", @context_tagged));
 
@@ -48,74 +55,82 @@ sub analyze {
   return;
 }
 
-sub get_valid_form {
-  my ($self, $word) = @_;
-  my $tools = $self->tools();
-  my ($form) = $tools->{wordnet}->validForms($word."#v");
-  if (! defined($form)) {
-    $form = $word."#v";
-  }
-  return $form;
+sub add_expectation {
+  my ($self, $expectation) = @_;
+  push @{$self->expectations()}, $expectation;
 }
 
-sub queue_frame {
-  my ($self, $frame) = @_;
-  push @{$self->queue()}, $frame;
-}
-
-sub unqueue_frame {
+sub has_token {
   my ($self) = @_;
-  return shift @{$self->queue()};
+  my $tagged_words = $self->tagged_words();
+  my $end_index = $#$tagged_words;
+  my $token_index = $self->token_index();
+  return ($token_index <= $end_index);
 }
 
-sub clear_queue_frames {
-  my ($self) = @_;
-  $self->queue([]);
-}
-
-sub print_queue {
-  my ($self, $queue) = @_;
-  my $frame_number = 1;
-  foreach my $queued (@$queue) {
-    say "Frame: $frame_number";
-    say $queued->to_string();
-    $frame_number++;
+sub get_token {
+  my ($self, $peek) = @_;
+  my $tagged_words = $self->tagged_words();
+  my $end_index = $#$tagged_words;
+  my $token_index = $self->token_index();
+  if ($token_index > $end_index) {
+    return;
+  } else {
+    $self->token_index($token_index + 1) unless ($peek);
+    return $tagged_words->[$token_index];    
   }
-  return;
 }
 
 # The core of teh parser. Based on the IPP general framework. 
 sub parse {
   my ($self) = @_;
 
-  my $tagged_words = $self->tagged_words();
-  my $end = $#$tagged_words;
-
-  my $index = 0;
-  my $this_token = $tagged_words->[$index];
-  my $this_type = $self->classify_token($this_token);
-
   my @buffer = ();
 
-  while($index < $end) {
-    my $next = $index + 1;
-    my $next_token = $tagged_words->[$next];
-    my $next_type = $self->classify_token($next_token);
+  $DB::single = 1;
+  while (1) {
+    my $token = $self->get_token();
+    last if (! defined($token));
 
-    $log->debug("  Token: $this_token");
-
-    if ($this_type eq 'event_builder') {
-      $log->debug("Attempting to build an event: $this_token");
-      $log->debugf("Buffer: %s", \@buffer);
+    # End of a sentence. Dump the buffer if we haven't seen anything interesting.
+    if ($token eq './PP') {
+      $log->debug("End of sentence");
       @buffer = ();
-    } elsif ($this_type eq 'token_refiner') {
-      push @buffer, [$this_type, $this_token];
-    } elsif ($this_type eq 'event_refiner') {
-      push @buffer, [$this_type, $this_token];
+      next;
     }
 
-    ($index, $this_token, $this_type) = ($next, $next_token, $next_type);
+    # First off, do we match a pending expectation.
+    my $expectations = $self->expectations();
+    my $expectation_index = first_index { 
+      my $test = $_->test();
+      &$test($self, $token);
+    } @$expectations;
+
+    # If we match an expectation, execute it, remove it, and go back to the 
+    # reader. 
+    if ($expectation_index != -1) {
+      $log->debugf("Expectation: $expectation_index");
+      my $expectation = $expectations->[$expectation_index];
+      my $action = $expectation->action();
+      splice($expectations, $expectation_index, 1);
+      &$action($self, $token);
+      next;
+    }
+
+    # Here, we want to do bottom-up processing. 
+    my $token_type = $self->classify_token($token);
+
+    if ($token_type eq 'event_builder') {
+      $log->debug("Attempting to build an event: $token, $token_type");
+      $log->debugf("Buffer: %s", \@buffer);
+      @buffer = ();
+    } elsif ($token_type eq 'token_refiner') {
+      push @buffer, [$token_type, $token];
+    } elsif ($token_type eq 'event_refiner') {
+      push @buffer, [$token_type, $token];
+    }
   }
+
 }
 
 1;
