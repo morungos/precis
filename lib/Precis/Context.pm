@@ -77,7 +77,13 @@ sub get_token {
     return;
   } else {
     $self->token_index($token_index + 1) unless ($peek);
-    return $tagged_words->[$token_index];    
+    my $token = $tagged_words->[$token_index];
+    if ($peek) {
+      $log->debug("  Peek token: $token");
+    } else {
+      $log->debug("Read token: $token");
+    }
+    return $token;    
   }
 }
 
@@ -86,6 +92,7 @@ sub parse {
   my ($self) = @_;
 
   my @buffer = ();
+  my @passive_buffer = ();
 
   $DB::single = 1;
   while (1) {
@@ -121,16 +128,48 @@ sub parse {
     my $token_type = $self->classify_token($token);
 
     if ($token_type eq 'event_builder') {
-      $log->debug("Attempting to build an event: $token, $token_type");
-      $log->debugf("Buffer: %s", \@buffer);
+      if (@passive_buffer) {
+        $log->debugf("Passive buffer: %s", \@passive_buffer);
+      }
+      # $self->get_verb_info($token);
+      $log->debugf("Attempting to build an event: %s, %s => %s", $token, $token_type, \@buffer);
       @buffer = ();
+      @passive_buffer = ();
     } elsif ($token_type eq 'token_refiner') {
       push @buffer, [$token_type, $token];
     } elsif ($token_type eq 'event_refiner') {
       push @buffer, [$token_type, $token];
+    } elsif ($token_type eq 'function_word') {
+      push @buffer, [$token_type, $token];
+    } elsif ($token_type eq 'passive_auxiliary') {
+      push @passive_buffer, [$token_type, $token];
+    } elsif ($token_type eq 'token_maker') {
+
+      # More complex processing, so we can detect bigger tokens. 
+      # We're in a loop here, with a sub-context.
+
+      my @token_constituents = ($token);
+      TOKEN_MAKER: while (1) {
+
+        # Peek at the next token
+        my $next_token = $self->get_token(1);
+        my $next_token_type = $self->classify_token($next_token);
+
+        if ($next_token_type ne 'token_maker') {
+          last TOKEN_MAKER;
+        }
+
+        # It's a token maker, so add to the @token_constituents and gobble it
+        push @token_constituents, $next_token;
+        $next_token = $self->get_token();
+      }
+
+      # Here we have a buffer of @token_constituents. Join it back with 
+      # spaces and push as a token maker.
+
+      push @buffer, [$token_type, join(" ", @token_constituents)];
     }
   }
-
 }
 
 1;

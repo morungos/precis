@@ -19,13 +19,21 @@ my $DOMAIN = {
 my $special_tokens = {
   "have"    => 'function_word',
   "has"     => 'function_word',
-  "is"      => 'function_word',
-  "are"     => 'function_word',
-  "was"     => 'function_word',
-  "been"    => 'function_word',
-  "being"   => 'function_word',
   "not"     => 'function_word',
-  "were"    => 'function_word',
+  "using"   => 'function_word',
+
+  "is"      => 'passive_auxiliary',
+  "are"     => 'passive_auxiliary',
+  "was"     => 'passive_auxiliary',
+  "were"    => 'passive_auxiliary',
+  "be"      => 'passive_auxiliary',
+  "been"    => 'passive_auxiliary',
+  "being"   => 'passive_auxiliary',
+};
+
+my $override_types = {
+  "clinical/JJ"     => 'token_maker',
+  "renal/JJ"        => 'token_maker',
 };
 
 my $types = {
@@ -84,7 +92,7 @@ sub classify_token {
   # Non-acronyms are lowercased for special-case detection
   $word = "\L$word" if ($word ne "\U$word" );
 
-  return $special_tokens->{$word} // $types->{$tag} // die "Unclassifiable tag: $word/$tag";
+  return $special_tokens->{$word} // $override_types->{$token} // $types->{$tag} // die "Unclassifiable tag: $word/$tag";
 }
 
 1;
