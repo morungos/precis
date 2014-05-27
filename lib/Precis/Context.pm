@@ -10,9 +10,9 @@ use Carp::Assert;
 use Log::Any qw($log);
 
 with 'Precis::LanguageTools';
-with 'Precis::Bootstrap';
 with 'Precis::Predictor';
 with 'Precis::Substantiator';
+with 'Precis::LexicalClassifier';
 
 has tagged_words => (
   is => 'rw'
@@ -28,7 +28,6 @@ sub analyze {
   my ($self, $text) = @_;
 
   my $tools = $self->tools();
-  $self->clear_queue_frames();
 
   my $sentences = $tools->{tagger}->get_sentences($text);
   my @context_tagged = ();
@@ -85,34 +84,37 @@ sub print_queue {
   return;
 }
 
-# The core of teh parser. It works as described on p74 of the Mauldin book. 
+# The core of teh parser. Based on the IPP general framework. 
 sub parse {
   my ($self) = @_;
 
-  my $queue = $self->queue();
-  $self->get_bootstrap_targets();
-  return undef if (! @$queue);
+  my $tagged_words = $self->tagged_words();
+  my $end = $#$tagged_words;
 
-  $self->print_queue($queue);
+  my $index = 0;
+  my $this_token = $tagged_words->[$index];
+  my $this_type = $self->classify_token($this_token);
 
-  while(my $frame = $self->unqueue_frame()) {
-    assert($frame);
-    if ($frame->is_complete()) {
-      $log->debug("Parse complete");
-      $frame->print_object(\*STDOUT);
-      return;
+  my @buffer = ();
+
+  while($index < $end) {
+    my $next = $index + 1;
+    my $next_token = $tagged_words->[$next];
+    my $next_type = $self->classify_token($next_token);
+
+    $log->debug("  Token: $this_token");
+
+    if ($this_type eq 'event_builder') {
+      $log->debug("Attempting to build an event: $this_token");
+      $log->debugf("Buffer: %s", \@buffer);
+      @buffer = ();
+    } elsif ($this_type eq 'token_refiner') {
+      push @buffer, [$this_type, $this_token];
+    } elsif ($this_type eq 'event_refiner') {
+      push @buffer, [$this_type, $this_token];
     }
 
-    my @requests = $self->predict($frame);
-    foreach my $request (@requests) {
-      
-      # When we get these requests, we need to pass them into the substantiator.  
-      # If we have a result, we should queue the new frame. If we don't get a response,
-      # we can simply drop the frame. 
-      if (my $modified_frame = $self->substantiate($frame, $request)) {
-        $self->queue_frame($modified_frame);
-      }
-    }
+    ($index, $this_token, $this_type) = ($next, $next_token, $next_type);
   }
 }
 
