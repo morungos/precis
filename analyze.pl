@@ -37,7 +37,6 @@ sub process_file {
     $title .= "." unless ($title =~ m{[\.\?]$});
     my $text = $title . "\n" . $abstract;
     $context->analyze($text);
-    $log->debug("Analysed");
   }
   $csv->eof or $csv->error_diag();
   close $fh;
