@@ -1,0 +1,69 @@
+---
+
+'proto-oncogene':
+  type: token_maker
+  action_units: []
+prognostic:
+  type: event_builder
+  action_units: []
+
+detect:
+  type: token_maker
+  action_units: 
+    - observation
+  passive:
+    - subject is biomarker => observation role
+
+observation:
+  object: *biomarker*
+
+# Gene, mutation, deletion, insertion, oncogene...
+biomarker:
+
+
+study:
+  type: token_maker
+  action_units:
+    - study
+
+
+
+cohort_study:
+  evidential_score: 4
+  isa: observational_study
+
+cross_sectional_study:
+  evidential_score: 2
+  isa: observational_study
+
+case_control_study:
+  evidential_score: 3
+  isa: observational_study
+
+observational_study:
+  isa: clinical_study
+
+randomized_controlled_trial:
+  isa: clinical_study
+
+pilot_randomized_controlled_trial:
+  isa: randomized_controlled_trial
+
+phase_1_randomized_controlled_trial:
+  isa: randomized_controlled_trial
+
+phase_2_randomized_controlled_trial:
+  isa: randomized_controlled_trial
+
+phase_3_randomized_controlled_trial:
+  isa: randomized_controlled_trial
+
+clinical_study:
+
+systematic_review:
+  evidential_score: 7
+  isa: literature_review
+
+case_report:
+  evidential_score: 1
+  isa: report
