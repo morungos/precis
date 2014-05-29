@@ -1,15 +1,29 @@
 ---
+gene:
+  type: token_maker
+  analysis_units: 
+    - au_gene
 
 'proto-oncogene':
   type: token_maker
-  action_units: []
+  analysis_units: []
 prognostic:
   type: event_builder
-  action_units: []
+  analysis_units: []
+
+
+
+study:
+  design: '*study_design*'
+
+rand,
+  primary_end_point: 
+  secondary_end_points:
+
 
 detect:
   type: token_maker
-  action_units: 
+  analysis_units: 
     - observation
   passive:
     - subject is biomarker => observation role
@@ -23,7 +37,7 @@ biomarker:
 
 study:
   type: token_maker
-  action_units:
+  analysis_units:
     - study
 
 
@@ -45,18 +59,9 @@ observational_study:
 
 randomized_controlled_trial:
   isa: clinical_study
-
-pilot_randomized_controlled_trial:
-  isa: randomized_controlled_trial
-
-phase_1_randomized_controlled_trial:
-  isa: randomized_controlled_trial
-
-phase_2_randomized_controlled_trial:
-  isa: randomized_controlled_trial
-
-phase_3_randomized_controlled_trial:
-  isa: randomized_controlled_trial
+  primary_end_point: "Measure"
+  secondary_end_points: "Array[Measure]"
+  phase: Phase
 
 clinical_study:
 
@@ -67,3 +72,9 @@ systematic_review:
 case_report:
   evidential_score: 1
   isa: report
+
+
+# Multiple endocrine neoplasia type 2 (MEN 2) is caused by RET proto-oncogene mutations and has a strong penetrance for medullary thyroid carcinoma (MTC). 
+# The volume and types of procedures performed by general surgeons have changed from 1991 to 1999
+# 
+hypothesis:
