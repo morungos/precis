@@ -2,7 +2,7 @@
 
 - name: 'trial1'
   cds:
-    - TYPE: 'Precis::CD::Trial'
+    - TYPE: 'Precis::AU::Trial'
       randomized: 
         role: '*boolean*'
       phase: 
