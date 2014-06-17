@@ -19,6 +19,7 @@ my $DOMAIN = {
 my $special_tokens = {
   "have"    => 'function_word',
   "has"     => 'function_word',
+  "had"     => 'function_word',
   "not"     => 'function_word',
   "using"   => 'function_word',
 
@@ -34,6 +35,8 @@ my $special_tokens = {
 my $override_types = {
   "clinical/JJ"     => 'token_maker',
   "renal/JJ"        => 'token_maker',
+
+  "study/NN"        => 'event_builder',
 };
 
 my $types = {
@@ -50,6 +53,7 @@ my $types = {
   WP   => 'function_word',
   EX   => 'function_word',
 
+  CD   => 'token_maker',
   NN   => 'token_maker',
   NNS  => 'token_maker',
   NNP  => 'token_maker',
@@ -65,7 +69,7 @@ my $types = {
   JJ   => 'token_refiner',
   JJS  => 'token_refiner',
   JJR  => 'token_refiner',
-  CD   => 'token_refiner',
+  AU   => 'token_refiner',
 
   RB   => 'event_refiner',
   RBR  => 'event_refiner',
