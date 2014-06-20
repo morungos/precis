@@ -27,6 +27,14 @@ has sentence_bounds => (
 has expectations => (
   is => 'rw',
 );
+has buffer => (
+  is => 'rw',
+  default => sub { [] }
+);
+has passive_buffer => (
+  is => 'rw',
+  default => sub { [] }
+);
 
 sub analyze {
   my ($self, $text) = @_;
@@ -91,8 +99,11 @@ sub get_token {
 sub parse {
   my ($self) = @_;
 
-  my @buffer = ();
-  my @passive_buffer = ();
+  my $buffer = $self->buffer();
+  my $passive_buffer = $self->passive_buffer();
+
+  $#$buffer = -1;
+  $#$passive_buffer = -1;
 
   $DB::single = 1;
   while (1) {
@@ -102,7 +113,7 @@ sub parse {
     # End of a sentence. Dump the buffer if we haven't seen anything interesting.
     if ($token eq './PP') {
       $log->debug("End of sentence");
-      @buffer = ();
+      $#$buffer = -1;
       next;
     }
 
@@ -128,21 +139,21 @@ sub parse {
     my $token_type = $self->classify_token($token);
 
     if ($token_type eq 'event_builder') {
-      if (@passive_buffer) {
-        $log->debugf("Passive buffer: %s", \@passive_buffer);
+      if (@$passive_buffer) {
+        $log->debugf("Passive buffer: %s", $passive_buffer);
       }
       # $self->get_verb_info($token);
-      $log->debugf("Attempting to build an event: %s, %s => %s", $token, $token_type, \@buffer);
-      @buffer = ();
-      @passive_buffer = ();
+      $self->handle_event_builder($token, $token_type, $buffer);
+      $#$buffer = -1;
+      $#$passive_buffer = -1;
     } elsif ($token_type eq 'token_refiner') {
-      push @buffer, [$token_type, $token];
+      push @$buffer, [$token_type, $token];
     } elsif ($token_type eq 'event_refiner') {
-      push @buffer, [$token_type, $token];
+      push @$buffer, [$token_type, $token];
     } elsif ($token_type eq 'function_word') {
-      push @buffer, [$token_type, $token];
+      push @$buffer, [$token_type, $token];
     } elsif ($token_type eq 'passive_auxiliary') {
-      push @passive_buffer, [$token_type, $token];
+      push @$passive_buffer, [$token_type, $token];
     } elsif ($token_type eq 'token_maker') {
 
       # More complex processing, so we can detect bigger tokens. 
@@ -167,9 +178,15 @@ sub parse {
       # Here we have a buffer of @token_constituents. Join it back with 
       # spaces and push as a token maker.
 
-      push @buffer, [$token_type, join(" ", @token_constituents)];
+      push @$buffer, [$token_type, join(" ", @token_constituents)];
     }
   }
+}
+
+sub handle_event_builder {
+  my ($self, $token, $token_type) = @_;
+  my $buffer = $self->buffer();
+  $log->debugf("Attempting to build an event: %s, %s => %s", $token, $token_type, $buffer);
 }
 
 1;
