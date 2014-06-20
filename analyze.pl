@@ -5,6 +5,9 @@ use warnings;
 
 use feature qw(say);
 
+use FindBin;
+use lib "$FindBin::Bin/lib";
+
 use Text::CSV;
 use Precis::Context;
 
