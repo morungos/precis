@@ -57,7 +57,7 @@ sub analyze {
   $self->sentence_bounds(\@context_sentences);
   $self->expectations([]);
 
-  $log->debug("Abstract: " . join(" ", @context_tagged));
+  $log->debug("Abstract: $text");
 
   $self->parse();
   return;
@@ -87,9 +87,9 @@ sub get_token {
     $self->token_index($token_index + 1) unless ($peek);
     my $token = $tagged_words->[$token_index];
     if ($peek) {
-      $log->debug("  Peek token: $token");
+      $log->trace("  Peek token: $token");
     } else {
-      $log->debug("Read token: $token");
+      $log->trace("Read token: $token");
     }
     return $token;    
   }
@@ -160,6 +160,7 @@ sub parse {
       # We're in a loop here, with a sub-context.
 
       my @token_constituents = ($token);
+      my @token_action_units = ();
       TOKEN_MAKER: while (1) {
 
         # Peek at the next token
@@ -178,7 +179,9 @@ sub parse {
       # Here we have a buffer of @token_constituents. Join it back with 
       # spaces and push as a token maker.
 
-      push @$buffer, [$token_type, join(" ", @token_constituents)];
+      my $token_maker = join(" ", @token_constituents);
+      $log->debugf("Token maker: %s", $token_maker);
+      push @$buffer, [$token_type, $token_maker];
     }
   }
 }

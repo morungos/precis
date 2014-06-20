@@ -11,12 +11,12 @@ use lib "$FindBin::Bin/lib";
 use Text::CSV;
 use Precis::Context;
 
-# use Log::Log4perl;
-# use Log::Any::Adapter;
+use Log::Log4perl;
+use Log::Any::Adapter;
 
-# Log::Log4perl::init('log4perl.conf');
-# Log::Any::Adapter->set('Log4perl');
-use Log::Any::Adapter('Stdout');
+Log::Log4perl::init('log4perl.conf');
+Log::Any::Adapter->set('Log4perl');
+# use Log::Any::Adapter('Stdout');
 
 use Log::Any qw($log);
 
