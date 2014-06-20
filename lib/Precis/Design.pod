@@ -55,48 +55,47 @@ CONSORT more or less forms a script for a clinical trial, and that -- if that sc
 the we can fill in the various slots in the composing conceptual dependencies. The question is:
 what are the conceptual dependencies?
 
-=head1 CONCEPTUAL DEPENDENCIES
+=head1 ANALYTIC UNITS
 
-=head2 ASSAY
+Rather than "conceptual dependencies" or "action units" (in the case of IPP), we use a term that is
+less related to news reports: "analytic units", which happily has the same acronym. There are several
+standard AUs that we expect to find, and these help define what we want in terms of slots for 
+classification and relevance assessment. These include:
 
-Describes an assay conducted, either as part of a clinical trial or as part of an in-vitro
-study. 
+=over 4
 
-Has a set of various slots, some of which might be complex. 
+=item focusing units
 
-=head2 DESIGN
+These describe a statement of the problem(s)/research issue(s) addressed, and tend to form the 
+initial and first 1/4 of the abstract, often one or two sentences. A typical sentence might be, e.g., 
+"To study the influence of DMA and DMB genes on susceptibility to Rheumatoid Arthritis (RA)."
 
-=head2 OUTCOME
+=item methods units
 
-Could include a prognosis, for example. A typical sentence is: "Based on long-term follow-up 
-(average 135 months), a majority (83.5%) of GISTs with PDGFRA mutations followed a benign course."
+These describe the research methods used (experimental research, case studies, questionnaires, etc.),
+and typically follow the focusing units. Typical methods may mention assays conducted, either as part 
+of a clinical trial or as part of an in-vitro study. A methods statement might be, "HLA-DRB1, DMA and 
+DMB polymorphisms were defined by PCR SSOP in 203 European Mediterranean RA patients and 181 
+unrelated healthy controls" - here PCR SSOP is actually a technique. 
 
-This could be coded as follows:
+=item results units
 
-    TYPE: OUTCOME
-    OBJECT: MOST <GISTs with PDGFRA mutations>
-    OUTCOME: BENIGN
+These describe what was found. This can include a prognosis, for example, a typical sentence is: "Based 
+on long-term follow-up (average 135 months), a majority (83.5%) of GISTs with PDGFRA mutations followed 
+a benign course."
 
-And another: "RAS appears to be a pejorative prognostic factor in terms of survival in NSCLC globally, 
+=item conclusion units
+
+These make inferences and claims based on the results. The boundary between the conclusion and results
+may be vaguer than some of the others (although strong numeric data tends to mark results rather than)
+conclusions. A conclusion may also report a prognosis, but will do so in a different form, e.g.
+"RAS appears to be a pejorative prognostic factor in terms of survival in NSCLC globally, 
 in ADC and when it is studied by PCR."
 
-This could be coded as follows:
+=back
 
-    TYPE: OUTCOME
-    OBJECT: <NSCLCs with RAS mutations>
-    OUTCOME: POTENTIALLY DAMAGING
-
-and
-
-    TYPE: OUTCOME
-    OBJECT: <ADCs with RAS mutations>
-    OUTCOME: POTENTIALLY DAMAGING
-
-As this shows, a single statement might map to several outcomes, which could even be disjoint. 
-
-=head2 HYPOTHESIS
-
-=head2 RECRUITMENT
+This shows that there are cross-cutting dimensions. E.g., "prognosis" might be something that relates to
+"focusing", "results", and "conclusions". "PCR"
 
 =head1 CAUSALITY
 

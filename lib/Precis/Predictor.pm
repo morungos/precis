@@ -20,7 +20,7 @@ sub predict {
   $log->debug("Calling predictor; SSIDT: $ssidt");
 
   # When we have a partial structure, we need to look at what do next. 
-  # First of all, get the current CDs
+  # First of all, get the current AUs
   my $cds = $partial->cds();
   my @requests = ();
 
@@ -35,7 +35,7 @@ sub predict {
     return @requests;
   }
 
-  # Okay, so we do have a target CD, and it isn't marked as complete. So we can
+  # Okay, so we do have a target AU, and it isn't marked as complete. So we can
   # predict some expansions, and where to look for them. 
 
   my $target = $cds->[$target_index];

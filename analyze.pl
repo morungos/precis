@@ -5,6 +5,9 @@ use warnings;
 
 use feature qw(say);
 
+use FindBin;
+use lib "$FindBin::Bin/lib";
+
 use Text::CSV;
 use Precis::Context;
 
@@ -19,7 +22,7 @@ use Log::Any qw($log);
 
 sub process {
   my $context = Precis::Context->new();
-  process_file($context, "data/sources.csv");
+  process_file($context, "data/trials.csv");
 }
 
 sub process_file {
@@ -31,13 +34,12 @@ sub process_file {
   while (my $row = $csv->getline($fh)) {
     my %data = ();
     @data{@$headers} = @$row;
-    next unless ($data{group} eq '1');
+    next unless ($data{include});
     my $title = $data{title};
     my $abstract = $data{abstract};
     $title .= "." unless ($title =~ m{[\.\?]$});
     my $text = $title . "\n" . $abstract;
     $context->analyze($text);
-    $log->debug("Analysed");
   }
   $csv->eof or $csv->error_diag();
   close $fh;

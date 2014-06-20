@@ -6,29 +6,40 @@ use Moose;
 use namespace::autoclean;
 
 use Carp::Assert;
+use List::MoreUtils qw(first_index);
 
 use Log::Any qw($log);
 
 with 'Precis::LanguageTools';
-with 'Precis::Bootstrap';
 with 'Precis::Predictor';
 with 'Precis::Substantiator';
+with 'Precis::LexicalClassifier';
 
 has tagged_words => (
-  is => 'rw'
+  is => 'rw',
+);
+has token_index => (
+  is => 'rw',
 );
 has sentence_bounds => (
-  is => 'rw'
+  is => 'rw',
 );
-has queue => (
-  is => 'rw'
+has expectations => (
+  is => 'rw',
+);
+has buffer => (
+  is => 'rw',
+  default => sub { [] }
+);
+has passive_buffer => (
+  is => 'rw',
+  default => sub { [] }
 );
 
 sub analyze {
   my ($self, $text) = @_;
 
   my $tools = $self->tools();
-  $self->clear_queue_frames();
 
   my $sentences = $tools->{tagger}->get_sentences($text);
   my @context_tagged = ();
@@ -40,8 +51,11 @@ sub analyze {
     push @context_tagged, @tagged_sentence;
   }
 
+  # Initialize the context
   $self->tagged_words(\@context_tagged);
+  $self->token_index(0);
   $self->sentence_bounds(\@context_sentences);
+  $self->expectations([]);
 
   $log->debug("Abstract: " . join(" ", @context_tagged));
 
@@ -49,71 +63,130 @@ sub analyze {
   return;
 }
 
-sub get_valid_form {
-  my ($self, $word) = @_;
-  my $tools = $self->tools();
-  my ($form) = $tools->{wordnet}->validForms($word."#v");
-  if (! defined($form)) {
-    $form = $word."#v";
-  }
-  return $form;
+sub add_expectation {
+  my ($self, $expectation) = @_;
+  push @{$self->expectations()}, $expectation;
 }
 
-sub queue_frame {
-  my ($self, $frame) = @_;
-  push @{$self->queue()}, $frame;
-}
-
-sub unqueue_frame {
+sub has_token {
   my ($self) = @_;
-  return shift @{$self->queue()};
+  my $tagged_words = $self->tagged_words();
+  my $end_index = $#$tagged_words;
+  my $token_index = $self->token_index();
+  return ($token_index <= $end_index);
 }
 
-sub clear_queue_frames {
-  my ($self) = @_;
-  $self->queue([]);
-}
-
-sub print_queue {
-  my ($self, $queue) = @_;
-  my $frame_number = 1;
-  foreach my $queued (@$queue) {
-    say "Frame: $frame_number";
-    say $queued->to_string();
-    $frame_number++;
+sub get_token {
+  my ($self, $peek) = @_;
+  my $tagged_words = $self->tagged_words();
+  my $end_index = $#$tagged_words;
+  my $token_index = $self->token_index();
+  if ($token_index > $end_index) {
+    return;
+  } else {
+    $self->token_index($token_index + 1) unless ($peek);
+    my $token = $tagged_words->[$token_index];
+    if ($peek) {
+      $log->debug("  Peek token: $token");
+    } else {
+      $log->debug("Read token: $token");
+    }
+    return $token;    
   }
-  return;
 }
 
-# The core of teh parser. It works as described on p74 of the Mauldin book. 
+# The core of teh parser. Based on the IPP general framework. 
 sub parse {
   my ($self) = @_;
 
-  my $queue = $self->queue();
-  $self->get_bootstrap_targets();
-  return undef if (! @$queue);
+  my $buffer = $self->buffer();
+  my $passive_buffer = $self->passive_buffer();
 
-  $self->print_queue($queue);
+  $#$buffer = -1;
+  $#$passive_buffer = -1;
 
-  while(my $frame = $self->unqueue_frame()) {
-    assert($frame);
-    if ($frame->is_complete()) {
-      $log->debug("Parse complete");
-      $frame->print_object(\*STDOUT);
-      return;
+  $DB::single = 1;
+  while (1) {
+    my $token = $self->get_token();
+    last if (! defined($token));
+
+    # End of a sentence. Dump the buffer if we haven't seen anything interesting.
+    if ($token eq './PP') {
+      $log->debug("End of sentence");
+      $#$buffer = -1;
+      next;
     }
 
-    my @requests = $self->predict($frame);
-    foreach my $request (@requests) {
-      
-      # When we get these requests, we need to pass them into the substantiator.  
-      # If we have a result, we should queue the new frame. If we don't get a response,
-      # we can simply drop the frame. 
-      if (my $modified_frame = $self->substantiate($frame, $request)) {
-        $self->queue_frame($modified_frame);
+    # First off, do we match a pending expectation.
+    my $expectations = $self->expectations();
+    my $expectation_index = first_index { 
+      my $test = $_->test();
+      &$test($self, $token);
+    } @$expectations;
+
+    # If we match an expectation, execute it, remove it, and go back to the 
+    # reader. 
+    if ($expectation_index != -1) {
+      $log->debugf("Expectation: $expectation_index");
+      my $expectation = $expectations->[$expectation_index];
+      my $action = $expectation->action();
+      splice($expectations, $expectation_index, 1);
+      &$action($self, $token);
+      next;
+    }
+
+    # Here, we want to do bottom-up processing. 
+    my $token_type = $self->classify_token($token);
+
+    if ($token_type eq 'event_builder') {
+      if (@$passive_buffer) {
+        $log->debugf("Passive buffer: %s", $passive_buffer);
       }
+      # $self->get_verb_info($token);
+      $self->handle_event_builder($token, $token_type, $buffer);
+      $#$buffer = -1;
+      $#$passive_buffer = -1;
+    } elsif ($token_type eq 'token_refiner') {
+      push @$buffer, [$token_type, $token];
+    } elsif ($token_type eq 'event_refiner') {
+      push @$buffer, [$token_type, $token];
+    } elsif ($token_type eq 'function_word') {
+      push @$buffer, [$token_type, $token];
+    } elsif ($token_type eq 'passive_auxiliary') {
+      push @$passive_buffer, [$token_type, $token];
+    } elsif ($token_type eq 'token_maker') {
+
+      # More complex processing, so we can detect bigger tokens. 
+      # We're in a loop here, with a sub-context.
+
+      my @token_constituents = ($token);
+      TOKEN_MAKER: while (1) {
+
+        # Peek at the next token
+        my $next_token = $self->get_token(1);
+        my $next_token_type = $self->classify_token($next_token);
+
+        if ($next_token_type ne 'token_maker') {
+          last TOKEN_MAKER;
+        }
+
+        # It's a token maker, so add to the @token_constituents and gobble it
+        push @token_constituents, $next_token;
+        $next_token = $self->get_token();
+      }
+
+      # Here we have a buffer of @token_constituents. Join it back with 
+      # spaces and push as a token maker.
+
+      push @$buffer, [$token_type, join(" ", @token_constituents)];
     }
   }
+}
+
+sub handle_event_builder {
+  my ($self, $token, $token_type) = @_;
+  my $buffer = $self->buffer();
+  $log->debugf("Attempting to build an event: %s, %s => %s", $token, $token_type, $buffer);
 }
 
 1;

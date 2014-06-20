@@ -22,4 +22,14 @@ sub tools {
   return $self->{_tools};
 }
 
+sub get_valid_form {
+  my ($self, $word) = @_;
+  my $tools = $self->tools();
+  my ($form) = $tools->{wordnet}->validForms($word."#v");
+  if (! defined($form)) {
+    $form = $word."#v";
+  }
+  return $form;
+}
+
 1;
