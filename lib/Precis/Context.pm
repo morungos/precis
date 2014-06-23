@@ -10,6 +10,9 @@ use List::MoreUtils qw(first_index);
 
 use Log::Any qw($log);
 
+use Precis::Actions;
+use Precis::Frame;
+use Precis::Expectation;
 use Precis::Data::KB;
 
 with 'Precis::LanguageTools';
@@ -45,6 +48,13 @@ has knowledge_base => (
   is => 'ro',
   default => sub {
     Precis::Data::KB->new()
+  }
+);
+
+has frame => (
+  is => 'ro',
+  default => sub {
+    Precis::Frame->new()
   }
 );
 
@@ -114,6 +124,7 @@ sub parse {
   my $buffer = $self->buffer();
   my $passive_buffer = $self->passive_buffer();
   my $kb = $self->knowledge_base();
+  my $expectations = $self->expectations();
 
   $#$buffer = -1;
   $#$passive_buffer = -1;
@@ -131,10 +142,9 @@ sub parse {
     }
 
     # First off, do we match a pending expectation.
-    my $expectations = $self->expectations();
     my $expectation_index = first_index { 
       my $test = $_->test();
-      &$test($self, $token);
+      &$test($self, $_, $token);
     } @$expectations;
 
     # If we match an expectation, execute it, remove it, and go back to the 
@@ -144,7 +154,7 @@ sub parse {
       my $expectation = $expectations->[$expectation_index];
       my $action = $expectation->action();
       splice($expectations, $expectation_index, 1);
-      &$action($self, $token);
+      &$action($self, $expectation, $token);
       next;
     }
 
@@ -173,8 +183,8 @@ sub parse {
       # We're in a loop here, with a sub-context.
 
       my $token_constituents = [$token];
-      my $token_action_units = [];
-      $kb->get_token_maker($token_constituents);
+      my $is_interesting_token;
+      $is_interesting_token ||= $kb->is_interesting_token_constituent($token_constituents);
 
       TOKEN_MAKER: while (1) {
 
@@ -189,7 +199,7 @@ sub parse {
         # It's a token maker, so add to the @token_constituents and gobble it
         push @$token_constituents, $next_token;
 
-        $kb->get_token_maker($token_constituents);
+        $is_interesting_token ||= $kb->is_interesting_token_constituent($token_constituents);
 
         $next_token = $self->get_token();
       }
@@ -198,8 +208,18 @@ sub parse {
       # spaces and push as a token maker.
 
       my $token_maker = join(" ", @$token_constituents);
-      $log->debugf("Token maker: %s", $token_maker);
+      
       push @$buffer, [$token_type, $token_maker];
+
+      if ($is_interesting_token) {
+        $log->debugf("Interesting token: %s", $token_maker);
+        my $expectation = Precis::Expectation->new({
+          name => "LOOK FOR $token_maker ASSOCIATED ACTION UNIT",
+          test => \&Precis::Actions::expectation_test_look_for_associated_action_units,
+          action => \&Precis::Actions::expectation_action_look_for_associated_action_units,
+        });
+        push @$expectations, $expectation;
+      }
     }
   }
 }
@@ -208,11 +228,6 @@ sub handle_event_builder {
   my ($self, $token, $token_type) = @_;
   my $buffer = $self->buffer();
   $log->debugf("Attempting to build an event: %s, %s => %s", $token, $token_type, $buffer);
-}
-
-sub find_token_maker_handler {
-  my ($self, $token) = @_;
-
 }
 
 1;

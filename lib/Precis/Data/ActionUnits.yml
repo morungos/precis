@@ -4,7 +4,7 @@
 
 au_genetic_change:
 
-au_mutation:
+au_gene_change:
   isa: au_genetic_change
   roles:
     gene: 
@@ -12,13 +12,11 @@ au_mutation:
         - in
         - of
 
+au_mutation:
+  isa: au_gene_change
+
 au_overexpression:
-  isa: au_genetic_change
-  roles:
-    gene: 
-      function_word: 
-        - in
-        - of
+  isa: au_gene_change
 
 # Common structures for the action units associated with tumours and disease features.
 
@@ -28,11 +26,35 @@ au_tumour:
       type: part_of_body
       function_word: of
 
+# Common structures for the action units associated with clinical outcomes.
+
+au_clinical_outcome:
+
+au_prognosis_outcome:
+  isa: au_clinical_outcome
+  build_with:
+    - 'prognostic/NN'
+
+au_treatment_outcome:
+  isa: au_clinical_outcome
+  role:
+    treatment:
+      function_word: with
+
 # Common structures for the action units associated with trials.
 
 au_study:
 
 au_literature_review:
+
+au_animal_model_study:
+  isa: au_study
+  roles:
+    animal:
+      type: animal
+
+au_in_vitro_study:
+  isa: au_study
 
 au_clinical_study:
   isa: au_study
@@ -62,3 +84,4 @@ au_systematic_review:
   isa: au_literature_review
   attributes:
     evidential_score: 7
+

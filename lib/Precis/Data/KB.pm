@@ -98,7 +98,7 @@ sub initialize_token_makers {
   }
 }
 
-sub get_token_maker {
+sub is_interesting_token_constituent {
   my ($self, $token_constituents) = @_;
 
   my $symbol = $token_constituents->[-1];
@@ -111,8 +111,6 @@ sub get_token_maker {
     $symbol = lc($word) . "/" . $tag;
   }
 
-  $log->debugf("Checking token: %s", $symbol);
-
   my $token_makers = $self->token_makers();
   my $entry = $token_makers->{$symbol} // return undef;
   while(exists($entry->{synonym})) {
@@ -120,8 +118,7 @@ sub get_token_maker {
     $entry = $token_makers->{$synonym} // croak "Can't find token maker synonym: $synonym";
   }
 
-  $log->debugf("Checking token: %s => %s", $symbol, $entry);
-  return $entry;
+  return 1;
 }
 
 1;
