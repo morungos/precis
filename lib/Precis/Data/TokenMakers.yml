@@ -1,0 +1,20 @@
+'mutations/NNS'
+  synonym: 'mutation/NN'
+  plural: True
+
+'mutation/NN':
+  associated_action_units:
+    - name: au_mutation
+
+'study/NN':
+  associated_action_units:
+    - name: au_study
+
+'tumors/NNS':
+  synonym: 'tumor/NN'
+  plural: True
+
+'tumor/NN':
+  associated_action_units:
+    - name: au_tumour
+

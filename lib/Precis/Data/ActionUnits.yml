@@ -1,0 +1,60 @@
+# Common structures for the action units associated with genomic characteristics and variants.
+
+au_genetic_change:
+
+au_mutation:
+  isa: au_genetic_change
+  roles:
+    gene: 
+      function_word: 
+        - in
+        - of
+
+au_overexpression:
+  isa: au_genetic_change
+  roles:
+    gene: 
+      function_word: 
+        - in
+        - of
+
+# Common structures for the action units associated with tumours and disease features.
+
+au_tumour:
+  roles:
+    site:
+      type: part_of_body
+      function_word: of
+
+# Common structures for the action units associated with trials.
+
+au_study:
+
+au_clinical_study:
+  isa: au_study
+  roles:
+    patients:
+      type: integer
+      cardinal_number_of: patient
+
+au_observational_study:
+  isa: au_clinical_study
+
+au_cohort_study:
+  isa: au_observational_study
+  attributes:
+    evidential_score: 4
+
+au_randomized_controlled_trial:
+  isa: au_clinical_study
+  roles:
+    phase:
+      type: rct_phase
+      function_word: phase
+  attributes:
+    evidential_score: 7
+
+au_systematic_review:
+  isa: au_literature_review
+  attributes:
+    evidential_score: 7
