@@ -98,7 +98,7 @@ sub initialize_token_makers {
   }
 }
 
-sub is_interesting_token_constituent {
+sub interesting_token_constituent {
   my ($self, $token_constituents) = @_;
 
   my $symbol = $token_constituents->[-1];
@@ -118,7 +118,7 @@ sub is_interesting_token_constituent {
     $entry = $token_makers->{$synonym} // croak "Can't find token maker synonym: $synonym";
   }
 
-  return 1;
+  return $entry;
 }
 
 1;

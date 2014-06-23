@@ -14,13 +14,14 @@ use Sub::Exporter -setup => {
 };
 
 sub expectation_test_look_for_associated_action_units {
-  my ($context, $expectation, $token) = @_;
+  my ($context, $expectation, $token, $entry) = @_;
   $log->debugf("Test %s: %s", $expectation->name(), $token);
+  $log->debugf("Buffer is: %s", $context->buffer());
   return 0;
 }
 
 sub expectation_action_look_for_associated_action_units {
-  my ($context, $expectation, $token) = @_;
+  my ($context, $expectation, $token, $entry) = @_;
   $log->debugf("Action %s: %s", $expectation->name(), $token);
   ...;
 }

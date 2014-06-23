@@ -144,7 +144,7 @@ sub parse {
     # First off, do we match a pending expectation.
     my $expectation_index = first_index { 
       my $test = $_->test();
-      &$test($self, $_, $token);
+      &$test($self, $_, $token, @{$_->arguments()});
     } @$expectations;
 
     # If we match an expectation, execute it, remove it, and go back to the 
@@ -154,7 +154,7 @@ sub parse {
       my $expectation = $expectations->[$expectation_index];
       my $action = $expectation->action();
       splice($expectations, $expectation_index, 1);
-      &$action($self, $expectation, $token);
+      &$action($self, $expectation, $token, @{$expectation->arguments()});
       next;
     }
 
@@ -183,8 +183,8 @@ sub parse {
       # We're in a loop here, with a sub-context.
 
       my $token_constituents = [$token];
-      my $is_interesting_token;
-      $is_interesting_token ||= $kb->is_interesting_token_constituent($token_constituents);
+      my $interesting_token;
+      $interesting_token //= $kb->interesting_token_constituent($token_constituents);
 
       TOKEN_MAKER: while (1) {
 
@@ -199,7 +199,7 @@ sub parse {
         # It's a token maker, so add to the @token_constituents and gobble it
         push @$token_constituents, $next_token;
 
-        $is_interesting_token ||= $kb->is_interesting_token_constituent($token_constituents);
+        $interesting_token //= $kb->interesting_token_constituent($token_constituents);
 
         $next_token = $self->get_token();
       }
@@ -211,12 +211,13 @@ sub parse {
       
       push @$buffer, [$token_type, $token_maker];
 
-      if ($is_interesting_token) {
+      if ($interesting_token) {
         $log->debugf("Interesting token: %s", $token_maker);
         my $expectation = Precis::Expectation->new({
-          name => "LOOK FOR $token_maker ASSOCIATED ACTION UNIT",
+          name => "LOOK FOR $interesting_token->{name} ASSOCIATED ACTION UNIT",
           test => \&Precis::Actions::expectation_test_look_for_associated_action_units,
           action => \&Precis::Actions::expectation_action_look_for_associated_action_units,
+          arguments => [$interesting_token]
         });
         push @$expectations, $expectation;
       }
