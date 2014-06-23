@@ -1,0 +1,15 @@
+s_clinical_genomics_study:
+  methods:
+    - isa: au_clinical_study
+  scenes:
+    - isa: au_gene_change
+      gene: gene1
+  results:
+    - isa: au_clinical_outcome
+
+s_in_vitro_study:
+  methods:
+
+  scenes:
+
+  results:
