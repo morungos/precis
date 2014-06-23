@@ -2,7 +2,7 @@ package Precis::Data::KB;
 
 use common::sense; 
 
-use Moose::Role;
+use Moose;
 use namespace::autoclean;
 
 use Carp;

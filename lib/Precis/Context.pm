@@ -10,30 +10,42 @@ use List::MoreUtils qw(first_index);
 
 use Log::Any qw($log);
 
+use Precis::Data::KB;
+
 with 'Precis::LanguageTools';
 with 'Precis::LexicalClassifier';
-
-with 'Precis::Data::KB';
 
 has tagged_words => (
   is => 'rw',
 );
+
 has token_index => (
   is => 'rw',
 );
+
 has sentence_bounds => (
   is => 'rw',
 );
+
 has expectations => (
   is => 'rw',
 );
+
 has buffer => (
   is => 'rw',
   default => sub { [] }
 );
+
 has passive_buffer => (
   is => 'rw',
   default => sub { [] }
+);
+
+has knowledge_base => (
+  is => 'ro',
+  default => sub {
+    Precis::Data::KB->new()
+  }
 );
 
 sub analyze {
@@ -101,6 +113,7 @@ sub parse {
 
   my $buffer = $self->buffer();
   my $passive_buffer = $self->passive_buffer();
+  my $kb = $self->knowledge_base();
 
   $#$buffer = -1;
   $#$passive_buffer = -1;
@@ -161,8 +174,8 @@ sub parse {
 
       my $token_constituents = [$token];
       my $token_action_units = [];
-      $self->get_token_maker($token_constituents);
-      
+      $kb->get_token_maker($token_constituents);
+
       TOKEN_MAKER: while (1) {
 
         # Peek at the next token
@@ -176,7 +189,7 @@ sub parse {
         # It's a token maker, so add to the @token_constituents and gobble it
         push @$token_constituents, $next_token;
 
-        $self->get_token_maker($token_constituents);
+        $kb->get_token_maker($token_constituents);
 
         $next_token = $self->get_token();
       }
