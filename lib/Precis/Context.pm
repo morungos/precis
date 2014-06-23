@@ -13,6 +13,8 @@ use Log::Any qw($log);
 with 'Precis::LanguageTools';
 with 'Precis::LexicalClassifier';
 
+with 'Precis::Data::KB';
+
 has tagged_words => (
   is => 'rw',
 );
@@ -157,8 +159,10 @@ sub parse {
       # More complex processing, so we can detect bigger tokens. 
       # We're in a loop here, with a sub-context.
 
-      my @token_constituents = ($token);
-      my @token_action_units = ();
+      my $token_constituents = [$token];
+      my $token_action_units = [];
+      $self->get_token_maker($token_constituents);
+      
       TOKEN_MAKER: while (1) {
 
         # Peek at the next token
@@ -170,14 +174,17 @@ sub parse {
         }
 
         # It's a token maker, so add to the @token_constituents and gobble it
-        push @token_constituents, $next_token;
+        push @$token_constituents, $next_token;
+
+        $self->get_token_maker($token_constituents);
+
         $next_token = $self->get_token();
       }
 
       # Here we have a buffer of @token_constituents. Join it back with 
       # spaces and push as a token maker.
 
-      my $token_maker = join(" ", @token_constituents);
+      my $token_maker = join(" ", @$token_constituents);
       $log->debugf("Token maker: %s", $token_maker);
       push @$buffer, [$token_type, $token_maker];
     }
@@ -188,6 +195,11 @@ sub handle_event_builder {
   my ($self, $token, $token_type) = @_;
   my $buffer = $self->buffer();
   $log->debugf("Attempting to build an event: %s, %s => %s", $token, $token_type, $buffer);
+}
+
+sub find_token_maker_handler {
+  my ($self, $token) = @_;
+
 }
 
 1;

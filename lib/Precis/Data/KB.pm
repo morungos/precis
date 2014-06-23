@@ -2,13 +2,15 @@ package Precis::Data::KB;
 
 use common::sense; 
 
-use Moose;
+use Moose::Role;
+use namespace::autoclean;
 
 use Carp;
 use YAML qw(LoadFile);
 use File::Spec;
 use Module::Load;
 use Scalar::Util qw(weaken);
+use Log::Any qw($log);
 
 use Precis::Data::AU;
 
@@ -21,6 +23,11 @@ has action_units => (
 );
 
 has token_makers => (
+  is => 'ro',
+  default => sub { {} }
+);
+
+has event_builders => (
   is => 'ro',
   default => sub { {} }
 );
@@ -92,7 +99,20 @@ sub initialize_token_makers {
 }
 
 sub get_token_maker {
-  my ($self, $symbol) = @_;
+  my ($self, $token_constituents) = @_;
+
+  my $symbol = $token_constituents->[-1];
+
+  my $index = rindex($symbol, "/");
+  my $word = substr($symbol, 0, $index);
+  my $tag = substr($symbol, $index + 1);
+
+  if (lcfirst($word) eq lc($word)) {
+    $symbol = lc($word) . "/" . $tag;
+  }
+
+  $log->debugf("Checking token: %s", $symbol);
+
   my $token_makers = $self->token_makers();
   my $entry = $token_makers->{$symbol} // return undef;
   while(exists($entry->{synonym})) {
@@ -100,6 +120,7 @@ sub get_token_maker {
     $entry = $token_makers->{$synonym} // croak "Can't find token maker synonym: $synonym";
   }
 
+  $log->debugf("Checking token: %s => %s", $symbol, $entry);
   return $entry;
 }
 
