@@ -11,8 +11,6 @@ use List::MoreUtils qw(first_index);
 use Log::Any qw($log);
 
 with 'Precis::LanguageTools';
-with 'Precis::Predictor';
-with 'Precis::Substantiator';
 with 'Precis::LexicalClassifier';
 
 has tagged_words => (
