@@ -1,4 +1,4 @@
-package Precis::CD::Base;
+package Precis::AU::Base;
 
 use common::sense; 
 

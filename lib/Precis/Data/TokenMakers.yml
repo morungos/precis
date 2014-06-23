@@ -1,4 +1,6 @@
-'mutations/NNS'
+---
+
+'mutations/NNS':
   synonym: 'mutation/NN'
   plural: True
 

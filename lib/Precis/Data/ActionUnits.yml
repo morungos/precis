@@ -1,3 +1,5 @@
+---
+
 # Common structures for the action units associated with genomic characteristics and variants.
 
 au_genetic_change:
@@ -29,6 +31,8 @@ au_tumour:
 # Common structures for the action units associated with trials.
 
 au_study:
+
+au_literature_review:
 
 au_clinical_study:
   isa: au_study
