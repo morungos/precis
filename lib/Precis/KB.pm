@@ -1,4 +1,4 @@
-package Precis::Data::KB;
+package Precis::KB;
 
 use common::sense; 
 
@@ -12,7 +12,7 @@ use Module::Load;
 use Scalar::Util qw(weaken);
 use Log::Any qw($log);
 
-use Precis::Data::AU;
+use Precis::AU;
 
 # A reorganized version of the knowledge base, we really don't need the level of meta-work that we 
 # used to use, this is defined more directly as a set of Moose structures.
@@ -36,15 +36,15 @@ sub BUILD {
   my ($self) = @_;
   $self->initialize_action_units();
   $self->initialize_token_makers();
-  $DB::single = 1;
   return;
 }
 
 sub initialize_action_units {
   my ($self) = @_;
 
-  my ($volume,$directories,$file) = File::Spec->splitpath(__FILE__);
-  my $source = File::Spec->catpath($volume, $directories, "ActionUnits.yml");
+  my ($volume,$directory,$file) = File::Spec->splitpath(__FILE__);
+  my $data_directory = File::Spec->catdir($directory, 'Data');
+  my $source = File::Spec->catpath($volume, $data_directory, "ActionUnits.yml");
 
   my $data = LoadFile($source);
 
@@ -76,8 +76,9 @@ sub initialize_action_units {
 sub initialize_token_makers {
   my ($self) = @_;
 
-  my ($volume,$directories,$file) = File::Spec->splitpath(__FILE__);
-  my $source = File::Spec->catpath($volume, $directories, "TokenMakers.yml");
+  my ($volume,$directory,$file) = File::Spec->splitpath(__FILE__);
+  my $data_directory = File::Spec->catdir($directory, 'Data');
+  my $source = File::Spec->catpath($volume, $data_directory, "TokenMakers.yml");
 
   my $data = LoadFile($source);
 

@@ -11,7 +11,7 @@ use List::MoreUtils qw(first_index);
 use Log::Any qw($log);
 
 use Precis::Frame;
-use Precis::Data::KB;
+use Precis::KB;
 use Precis::LexicalClassifier qw(classify_token);
 
 use Precis::Expectations::LookForAssociatedAUs;
@@ -47,7 +47,7 @@ has passive_buffer => (
 has knowledge_base => (
   is => 'ro',
   default => sub {
-    Precis::Data::KB->new()
+    Precis::KB->new()
   }
 );
 
