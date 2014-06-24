@@ -1,0 +1,206 @@
+### Part 1 - manually curated subset of data from GPS
+
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IIB,pmid:19652056
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IIB,pmid:19779040
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:14745431
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:15510211
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:17339191
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:18818391
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:19589924
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:20607847
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:15930265
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:18191450
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:19075254
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:19567878
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:19652056
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:19779040
+ABL1,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:20194843
+ABL1,haematopoietic and lymphoid tissue lymphoid neoplasm,IIB,pmid:19652056
+ABL1,haematopoietic and lymphoid tissue lymphoid neoplasm,IIB,pmid:19779040
+ABL1,haematopoietic and lymphoid tissue lymphoid neoplasm,VD,pmid:19075254
+ABL1,haematopoietic and lymphoid tissue lymphoid neoplasm,VD,pmid:20194843
+BRAF,malignant melanoma,IA,pmid:20818844
+BRAF,malignant melanoma,IVD,pmid:20630094
+BRAF,malignant melanoma,IVD,pmid:20818844
+BRAF,breast carcinoma,VD,pmid:19593635
+BRAF,large intestine carcinoma,IIB,pmid:19571295
+BRAF,large intestine carcinoma,IIB,pmid:20619739
+BRAF,large intestine carcinoma,IVD,pmid:14668801
+BRAF,large intestine carcinoma,VD,pmid:12068308
+BRAF,large intestine carcinoma,VD,pmid:15150094
+BRAF,lung carcinoma,IVD,pmid:21483012
+BRAF,skin malignant melanoma,IVD,pmid:15046639
+BRAF,skin malignant melanoma,VD,pmid:18794803
+BRAF,skin malignant melanoma,VD,pmid:20331454
+BRAF,skin malignant melanoma,VD,pmid:20551065
+BRAF,thyroid carcinoma,IVD,pmid:15902486
+BRAF,thyroid carcinoma,IVD,pmid:16021577
+BRAF,thyroid carcinoma,IVD,pmid:18682506
+EGFR,breast carcinoma,IVD,pmid:20604919
+EGFR,central nervous system glioma,IVD,pmid:19571295
+EGFR,central nervous system glioma,IVD,pmid:20619739
+EGFR,central nervous system glioma,VD,pmid:17177598
+EGFR,central nervous system glioma,VD,pmid:7177598
+EGFR,haematopoietic and lymphoid tissue lymphoid neoplasm,VD,pmid:7088437
+EGFR,lung carcinoma,IA,pmid:16785471
+EGFR,lung carcinoma,IA,pmid:19671843
+EGFR,lung carcinoma,IA,pmid:20887192
+EGFR,lung carcinoma,IA,pmid:21135146
+EGFR,lung carcinoma,IB,pmid:15710947
+EGFR,lung carcinoma,IB,pmid:20479403
+EGFR,lung carcinoma,IB,pmid:20887192
+EGFR,lung carcinoma,IVD,pmid:15741570
+EGFR,lung carcinoma,IVD,pmid:16043828
+EGFR,lung carcinoma,IVD,pmid:16052218
+EGFR,lung carcinoma,IVD,pmid:16205628
+EGFR,lung carcinoma,IVD,pmid:17285735
+EGFR,lung carcinoma,IVD,pmid:17429313
+EGFR,lung carcinoma,IVD,pmid:18676761
+EGFR,lung carcinoma,IVD,pmid:19096302
+EGFR,lung carcinoma,IVD,pmid:20150372
+EGFR,lung carcinoma,IVD,pmid:20811949
+EGFR,lung carcinoma,VD,pmid:15118125
+EGFR,lung carcinoma,VD,pmid:16187797
+EGFR,lung carcinoma,VD,pmid:18408761
+EGFR,lung carcinoma,VD,pmid:18676761
+EGFR,lung carcinoma,VD,pmid:19671738
+EGFR,oesophagus carcinoma,VD,pmid:20443891
+EGFR,peritoneum mesothelioma,IVD,pmid:18998063
+EGFR,thyroid carcinoma,IVD,pmid:19253367
+EGFR,thyroid carcinoma,VD,pmid:19253367
+ERBB2,lung carcinoma,IVD,pmid:15457249
+ERBB2,lung carcinoma,IVD,pmid:16843263
+ERBB2,lung carcinoma,IVD,pmid:19122144
+ERBB2,lung carcinoma,VD,pmid:15753357
+ERBB2,lung carcinoma,VD,pmid:16775247
+ERBB2,lung carcinoma,VD,pmid:16843263
+FLT3,haematopoietic and lymphoid tissue haematopoietic neoplasm,IIIC,pmid:16857985
+FLT3,haematopoietic and lymphoid tissue haematopoietic neoplasm,IIIC,pmid:20212254
+FLT3,haematopoietic and lymphoid tissue haematopoietic neoplasm,VD,pmid:18230792
+FLT3,haematopoietic and lymphoid tissue lymphoid neoplasm,IIIC,pmid:16857985
+FLT3,haematopoietic and lymphoid tissue lymphoid neoplasm,IIIC,pmid:20212254
+FLT3,haematopoietic and lymphoid tissue lymphoid neoplasm,IIIC,pmid:20733134
+HRAS,skin carcinoma,VD,pmid:22256804
+HRAS,thyroid carcinoma,VD,pmid:12947056
+HRAS,urinary tract carcinoma,VD,pmid:21072204
+HRAS,urinary tract neoplasm,VD,pmid:21072204
+JAK2,haematopoietic and lymphoid tissue haematopoietic neoplasm,IA,pmid:20843246
+JAK2,haematopoietic and lymphoid tissue haematopoietic neoplasm,IA,pmid:21220608
+JAK2,haematopoietic and lymphoid tissue haematopoietic neoplasm,IB,pmid:15781101
+JAK2,haematopoietic and lymphoid tissue haematopoietic neoplasm,IB,pmid:15837627
+JAK2,haematopoietic and lymphoid tissue haematopoietic neoplasm,IB,pmid:15858187
+JAK2,haematopoietic and lymphoid tissue haematopoietic neoplasm,IB,pmid:20191332
+JAK2,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:21120162
+KIT,eye malignant melanoma,IVD,pmid:21478825
+KIT,genital tract germ cell tumour,IVD,pmid:12824871
+KIT,haematopoietic and lymphoid tissue haematopoietic neoplasm,IB,pmid:19193436
+KIT,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:16921041
+KIT,haematopoietic and lymphoid tissue haematopoietic neoplasm,IVD,pmid:9990072
+KIT,haematopoietic and lymphoid tissue lymphoid neoplasm,IVD,pmid:16291592
+KIT,skin malignant melanoma,IVD,pmid:16908931
+KIT,skin malignant melanoma,IVD,pmid:17372901
+KIT,skin malignant melanoma,IVD,pmid:18980976
+KIT,skin malignant melanoma,IVD,pmid:19018266
+KIT,skin malignant melanoma,IVD,pmid:19812602
+KIT,skin malignant melanoma,IVD,pmid:2037215
+KIT,skin malignant melanoma,IVD,pmid:21159146
+KIT,soft tissue gastrointestinal stromal tumour,IVD,pmid:15685537
+KIT,soft tissue gastrointestinal stromal tumour,IVD,pmid:16135486
+KIT,soft tissue gastrointestinal stromal tumour,IVD,pmid:16685437
+KIT,soft tissue gastrointestinal stromal tumour,IVD,pmid:16697720
+KIT,soft tissue gastrointestinal stromal tumour,IVD,pmid:17875769
+KIT,soft tissue gastrointestinal stromal tumour,VD,pmid:12481435
+KIT,soft tissue gastrointestinal stromal tumour,VD,pmid:15838387
+KIT,soft tissue gastrointestinal stromal tumour,VD,pmid:15897563
+KIT,soft tissue gastrointestinal stromal tumour,VD,pmid:16046538
+KIT,soft tissue gastrointestinal stromal tumour,VD,pmid:17699867
+KIT,soft tissue gastrointestinal stromal tumour,VD,pmid:19723893
+KIT,soft tissue gastrointestinal stromal tumour,VD,pmid:20970876
+KIT,testis germ cell tumour,IIIC,pmid:16135486
+KIT,testis germ cell tumour,IVD,pmid:14695343
+KIT,testis germ cell tumour,IVD,pmid:16741525
+KIT,thymus thymic carcinoma,IVD,pmid:19861435
+KRAS,large intestine carcinoma,IB,pmid:18316791
+KRAS,large intestine carcinoma,IB,pmid:18946061
+KRAS,large intestine carcinoma,IB,pmid:20978259
+KRAS,large intestine carcinoma,IIB,20978259
+KRAS,large intestine carcinoma,IIB,pmid:18390968
+KRAS,large intestine carcinoma,IIB,pmid:19884549
+KRAS,large intestine carcinoma,VD,18390968
+KRAS,large intestine carcinoma,VD,pmid:21118963
+KRAS,lung carcinoma,IIB,pmid:15597105
+KRAS,lung carcinoma,IIB,pmid:16043828
+KRAS,lung carcinoma,IIB,pmid:18626007
+KRAS,lung carcinoma,IIB,pmid:20022659
+KRAS,lung carcinoma,IIB,pmid:21187500
+KRAS,lung carcinoma,IVD,pmid:15597105
+KRAS,lung carcinoma,IVD,pmid:8395679
+KRAS,lung carcinoma,VD,21169473
+KRAS,lung carcinoma,VD,pmid:19029981
+KRAS,lung carcinoma,VD,pmid:21187500
+KRAS,lung carcinoma,VD,pmid:8395679
+KRAS,ovary carcinoma,VD,pmid:19018267
+KRAS,pancreas carcinoma,IIB,pmid:18626007
+KRAS,pancreas carcinoma,IIB,pmid:20824720
+MET,kidney carcinoma,IVD,pmid:10327054
+MET,kidney carcinoma,IVD,pmid:18636147
+MET,kidney carcinoma,IVD,pmid:9140397
+MET,upper aerodigestive tract carcinoma,IVD,pmid:10734314
+MET,upper aerodigestive tract carcinoma,IVD,pmid:14627992
+MET,upper aerodigestive tract carcinoma,IVD,pmid:19639388
+NRAS,large intestine carcinoma,IVD,pmid:20619739
+NRAS,large intestine carcinoma,VD,pmid:20619739
+NRAS,skin malignant melanoma,IIB,pmid:18390968
+NRAS,skin malignant melanoma,VD,pmid:15046639
+NRAS,skin malignant melanoma,VD,pmid:20689758
+NRAS,skin malignant melanoma,VD,pmid:21107323
+NRAS,skin malignant melanoma,VD,pmid:21245089
+NRAS,skin malignant melanoma,VD,pmid:8120410
+NRAS,thyroid carcinoma,VD,pmid:12947056
+NRAS,thyroid neoplasm,VD,pmid:19837916
+PDGFRA,gastrointestinal stromal tumour,IVD,pmid:15146165
+PDGFRA,gastrointestinal stromal tumour,IVD,pmid:15154005
+PDGFRA,gastrointestinal stromal tumour,IVD,pmid:16776995
+PDGFRA,gastrointestinal stromal tumour,IVD,pmid:17171690
+PDGFRA,gastrointestinal stromal tumour,VD,pmid:15928335
+PIK3CA,breast carcinoma,IVD,pmid:15254419
+PIK3CA,breast carcinoma,IVD,pmid:17947469
+PIK3CA,breast carcinoma,IVD,pmid:18183466
+PIK3CA,breast carcinoma,IVD,pmid:18676830
+PIK3CA,breast carcinoma,IVD,pmid:19029981
+PIK3CA,breast carcinoma,IVD,pmid:19418217
+PIK3CA,breast carcinoma,IVD,pmid:19513541
+PIK3CA,breast carcinoma,IVD,pmid:19924296
+PIK3CA,breast carcinoma,VD,pmid:16339315
+PIK3CA,breast carcinoma,VD,pmid:18676830
+PIK3CA,cervix carcinoma,IVD,pmid:19148475
+PIK3CA,endometrium carcinoma,IVD,pmid:19839777
+PIK3CA,large intestine carcinoma,IVD,pmid:15016963
+PIK3CA,large intestine carcinoma,IVD,pmid:15930273
+PIK3CA,large intestine carcinoma,IVD,pmid:18224685
+PIK3CA,large intestine carcinoma,IVD,pmid:19903786
+PIK3CA,large intestine carcinoma,VD,pmid:15930273
+PIK3CA,lung carcinoma,IVD,pmid:19029981
+PIK3CA,lung carcinoma,IVD,pmid:19513541
+PIK3CA,lung carcinoma,VD,pmid:16906227
+PIK3CA,lung carcinoma,VD,pmid:19029981
+PIK3CA,lung carcinoma,VD,pmid:19513541
+RET,adrenal gland pheochromocytoma,IIC,pmid:12686527
+RET,adrenal gland pheochromocytoma,IIC,pmid:18073307
+RET,adrenal gland pheochromocytoma,IIC,pmid:19401695
+RET,adrenal gland pheochromocytoma,IIC,pmid:7906866
+RET,adrenal gland pheochromocytoma,IIC,pmid:7907913
+RET,adrenal gland pheochromocytoma,IIC,pmid:7913021
+RET,adrenal gland pheochromocytoma,IVD,pmid:7852530
+RET,thyroid carcinoma,IA,pmid:18378960
+RET,thyroid carcinoma,IA,pmid:19564535
+RET,thyroid carcinoma,IA,pmid:20065189
+RET,thyroid carcinoma,IA,pmid:20368568
+RET,thyroid carcinoma,IIC,pmid:12686527
+RET,thyroid carcinoma,IIC,pmid:18073307
+RET,thyroid carcinoma,IIC,pmid:19401695
+RET,thyroid carcinoma,IIC,pmid:7906866
+RET,thyroid carcinoma,IIC,pmid:7907913
+RET,thyroid carcinoma,IIC,pmid:7913021
+RET,thyroid carcinoma,IVD,pmid:18282654
+RET,thyroid carcinoma,IVD,pmid:9191060
