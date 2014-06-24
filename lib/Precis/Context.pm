@@ -10,10 +10,10 @@ use List::MoreUtils qw(first_index);
 
 use Log::Any qw($log);
 
-use Precis::Actions;
 use Precis::Frame;
-use Precis::Expectation;
 use Precis::Data::KB;
+
+use Precis::Expectations::LookForAssociatedAUs;
 
 with 'Precis::LanguageTools';
 with 'Precis::LexicalClassifier';
@@ -143,8 +143,7 @@ sub parse {
 
     # First off, do we match a pending expectation.
     my $expectation_index = first_index { 
-      my $test = $_->test();
-      &$test($self, $_, $token, @{$_->arguments()});
+      $_->test($self, $token, @{$_->arguments()});
     } @$expectations;
 
     # If we match an expectation, execute it, remove it, and go back to the 
@@ -152,9 +151,8 @@ sub parse {
     if ($expectation_index != -1) {
       $log->debugf("Expectation: $expectation_index");
       my $expectation = $expectations->[$expectation_index];
-      my $action = $expectation->action();
       splice($expectations, $expectation_index, 1);
-      &$action($self, $expectation, $token, @{$expectation->arguments()});
+      $expectation->action($self, $token, @{$expectation->arguments()});
       next;
     }
 
@@ -213,10 +211,8 @@ sub parse {
 
       if ($interesting_token) {
         $log->debugf("Interesting token: %s", $token_maker);
-        my $expectation = Precis::Expectation->new({
+        my $expectation = Precis::Expectations::LookForAssociatedAUs->new({
           name => "LOOK FOR $interesting_token->{name} ASSOCIATED ACTION UNIT",
-          test => \&Precis::Actions::expectation_test_look_for_associated_action_units,
-          action => \&Precis::Actions::expectation_action_look_for_associated_action_units,
           arguments => [$interesting_token]
         });
         push @$expectations, $expectation;
