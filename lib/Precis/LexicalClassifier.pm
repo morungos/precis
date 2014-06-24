@@ -2,92 +2,30 @@ package Precis::LexicalClassifier;
 
 use common::sense; 
 
-use Moose::Role;
-use namespace::autoclean;
+my $special_tokens;
+my $override_types;
+my $types;
 
-requires 'tools';
+use Carp;
+use YAML;
+use File::Spec;
+use Module::Load;
 
-my $DOMAIN = {
-  "proto-oncogene" => {
-    "type" => "token_maker",
-    "action_units" => []
-  }
-};
+BEGIN {
+  my ($volume,$directory,$file) = File::Spec->splitpath(__FILE__);
+  my $data_directory = File::Spec->catdir($directory, 'Data');
 
-# Probably these tavbles should really be read from a YAML file. Some day. 
+  $special_tokens = YAML::LoadFile(File::Spec->catpath($volume, $data_directory, "SpecialTokens.yml"));
+  $override_types = YAML::LoadFile(File::Spec->catpath($volume, $data_directory, "OverrideTypes.yml"));
+  $types = YAML::LoadFile(File::Spec->catpath($volume, $data_directory, "Types.yml"));
+}
 
-my $special_tokens = {
-  "have"    => 'function_word',
-  "has"     => 'function_word',
-  "had"     => 'function_word',
-  "not"     => 'function_word',
-  "using"   => 'function_word',
-
-  "is"      => 'passive_auxiliary',
-  "are"     => 'passive_auxiliary',
-  "was"     => 'passive_auxiliary',
-  "were"    => 'passive_auxiliary',
-  "be"      => 'passive_auxiliary',
-  "been"    => 'passive_auxiliary',
-  "being"   => 'passive_auxiliary',
-};
-
-my $override_types = {
-  "clinical/JJ"     => 'token_maker',
-  "renal/JJ"        => 'token_maker',
-
-  "study/NN"        => 'event_builder',
-};
-
-my $types = {
-  DET  => 'function_word',
-  IN   => 'function_word',
-  CC   => 'function_word',
-  TO   => 'function_word',
-  WDT  => 'function_word',
-  WRB  => 'function_word',
-  WPS  => 'function_word',
-  MD   => 'function_word',
-  PRP  => 'function_word',
-  PRPS => 'function_word',
-  WP   => 'function_word',
-  EX   => 'function_word',
-
-  CD   => 'token_maker',
-  NN   => 'token_maker',
-  NNS  => 'token_maker',
-  NNP  => 'token_maker',
-  NNPS => 'token_maker',
-
-  VB   => 'event_builder',
-  VBD  => 'event_builder',
-  VBG  => 'event_builder',
-  VBN  => 'event_builder',
-  VBP  => 'event_builder',
-  VBZ  => 'event_builder',
-
-  JJ   => 'token_refiner',
-  JJS  => 'token_refiner',
-  JJR  => 'token_refiner',
-  AU   => 'token_refiner',
-
-  RB   => 'event_refiner',
-  RBR  => 'event_refiner',
-  RBS  => 'event_refiner',
-
-  PP   => 'non_word',
-  PPC  => 'non_word',
-  PPL  => 'non_word',
-  PPS  => 'non_word',
-  POS  => 'non_word',
-  LRB  => 'non_word',
-  RRB  => 'non_word',
-  SYM  => 'non_word',
-  FW   => 'non_word',
+use Sub::Exporter -setup => {
+  exports => [ qw(classify_token) ],
 };
 
 sub classify_token {
-  my ($self, $token) = @_;
+  my ($token) = @_;
 
   my $index = rindex($token, "/");
   my $word = substr($token, 0, $index);

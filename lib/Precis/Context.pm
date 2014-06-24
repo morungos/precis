@@ -12,11 +12,11 @@ use Log::Any qw($log);
 
 use Precis::Frame;
 use Precis::Data::KB;
+use Precis::LexicalClassifier qw(classify_token);
 
 use Precis::Expectations::LookForAssociatedAUs;
 
 with 'Precis::LanguageTools';
-with 'Precis::LexicalClassifier';
 
 has tagged_words => (
   is => 'rw',
@@ -157,7 +157,7 @@ sub parse {
     }
 
     # Here, we want to do bottom-up processing. 
-    my $token_type = $self->classify_token($token);
+    my $token_type = classify_token($token);
 
     if ($token_type eq 'event_builder') {
       if (@$passive_buffer) {
@@ -188,7 +188,7 @@ sub parse {
 
         # Peek at the next token
         my $next_token = $self->get_token(1);
-        my $next_token_type = $self->classify_token($next_token);
+        my $next_token_type = classify_token($next_token);
 
         if ($next_token_type ne 'token_maker') {
           last TOKEN_MAKER;

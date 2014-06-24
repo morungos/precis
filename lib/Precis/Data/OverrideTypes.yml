@@ -1,0 +1,5 @@
+---
+
+'clinical/JJ':    token_maker
+'renal/JJ':       token_maker
+'study/NN':       event_builder
