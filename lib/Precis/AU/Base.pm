@@ -1,6 +1,6 @@
 package Precis::AU::Base;
 
-use common::sense; 
+use common::sense;
 
 use Moose::Role;
 use namespace::autoclean;

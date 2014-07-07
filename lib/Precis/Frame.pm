@@ -1,6 +1,6 @@
 package Precis::Frame;
 
-use common::sense; 
+use common::sense;
 
 use Moose;
 use namespace::autoclean;
@@ -23,7 +23,7 @@ Precis::Frame - Frame for the text analyzer
 =head1 DESCRIPTION
 
 There will generally only be one frame, but it is a representation for the output
-representation from the context. 
+representation from the context.
 
 =head1 METHODS
 
@@ -33,18 +33,18 @@ representation from the context.
 
 The constructor for a new expectation, which takes both the test and the action
 as code references. Both attributes can be set at constructor time, but not modified
-afterwards. 
+afterwards.
 
 =item $self->mop()
 
-Attribute for the currently selected MOP, if we have one. 
+Attribute for the currently selected MOP, if we have one.
 
 =item $self->action_units()
 
-Attribute for the current set of action units. These are primarily stored in an 
-indexed array. 
+Attribute for the current set of action units. These are primarily stored in an
+indexed array.
 
 =back
 
-=cut 
+=cut
 

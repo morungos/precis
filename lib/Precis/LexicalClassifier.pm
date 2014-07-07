@@ -1,6 +1,6 @@
 package Precis::LexicalClassifier;
 
-use common::sense; 
+use common::sense;
 
 my $special_tokens;
 my $override_types;
@@ -45,7 +45,7 @@ Precis::LexicalClassifier - Lexical classifier for the text analyzer
 
 =head1 DESCRIPTION
 
-This 
+This
 
 =head1 METHODS
 
@@ -62,7 +62,7 @@ An event building token - typically an event-building verb
 
 =item token_maker
 
-A token maker, commonly identifying a picture producer which may point to a set of 
+A token maker, commonly identifying a picture producer which may point to a set of
 possible events. Commonly a concrete noun.
 
 =item token_refiner
@@ -75,13 +75,13 @@ Usually an adverb, modifying a verb/significant event.
 
 =item function_word
 
-Most other words. 
+Most other words.
 
 =item non_word
 
-For consistency, we allow punctuation to be passed through as a non_word class. 
+For consistency, we allow punctuation to be passed through as a non_word class.
 
 =back
 
-=cut 
+=cut
 

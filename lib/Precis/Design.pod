@@ -19,7 +19,7 @@ Hopewell et al. (2008). CONSORT for Reporting Randomized Controlled Trials in Jo
 =back
 
 The basic approach is that of text skimming. There is no real need to parse or analyse the whole text to determine
-relevance. We really want to skim the text with a bunch of questions loosely associated to relevance. These 
+relevance. We really want to skim the text with a bunch of questions loosely associated to relevance. These
 questions include:
 
 =over 4
@@ -30,7 +30,7 @@ Does this text describe a clinical trial? (this is where the CONSORT guidance is
 
 =item *
 
-Does this text describe an in-vitro study? 
+Does this text describe an in-vitro study?
 
 =item *
 
@@ -51,7 +51,7 @@ What was the outcome of the study?
 =back
 
 Admittedly, we are somewhat distorting the script approach, but we are using the assumption that
-CONSORT more or less forms a script for a clinical trial, and that -- if that script is matched -- 
+CONSORT more or less forms a script for a clinical trial, and that -- if that script is matched --
 the we can fill in the various slots in the composing conceptual dependencies. The question is:
 what are the conceptual dependencies?
 
@@ -59,29 +59,29 @@ what are the conceptual dependencies?
 
 Rather than "conceptual dependencies" or "action units" (in the case of IPP), we use a term that is
 less related to news reports: "analytic units", which happily has the same acronym. There are several
-standard AUs that we expect to find, and these help define what we want in terms of slots for 
+standard AUs that we expect to find, and these help define what we want in terms of slots for
 classification and relevance assessment. These include:
 
 =over 4
 
 =item focusing units
 
-These describe a statement of the problem(s)/research issue(s) addressed, and tend to form the 
-initial and first 1/4 of the abstract, often one or two sentences. A typical sentence might be, e.g., 
+These describe a statement of the problem(s)/research issue(s) addressed, and tend to form the
+initial and first 1/4 of the abstract, often one or two sentences. A typical sentence might be, e.g.,
 "To study the influence of DMA and DMB genes on susceptibility to Rheumatoid Arthritis (RA)."
 
 =item methods units
 
 These describe the research methods used (experimental research, case studies, questionnaires, etc.),
-and typically follow the focusing units. Typical methods may mention assays conducted, either as part 
-of a clinical trial or as part of an in-vitro study. A methods statement might be, "HLA-DRB1, DMA and 
-DMB polymorphisms were defined by PCR SSOP in 203 European Mediterranean RA patients and 181 
-unrelated healthy controls" - here PCR SSOP is actually a technique. 
+and typically follow the focusing units. Typical methods may mention assays conducted, either as part
+of a clinical trial or as part of an in-vitro study. A methods statement might be, "HLA-DRB1, DMA and
+DMB polymorphisms were defined by PCR SSOP in 203 European Mediterranean RA patients and 181
+unrelated healthy controls" - here PCR SSOP is actually a technique.
 
 =item results units
 
-These describe what was found. This can include a prognosis, for example, a typical sentence is: "Based 
-on long-term follow-up (average 135 months), a majority (83.5%) of GISTs with PDGFRA mutations followed 
+These describe what was found. This can include a prognosis, for example, a typical sentence is: "Based
+on long-term follow-up (average 135 months), a majority (83.5%) of GISTs with PDGFRA mutations followed
 a benign course."
 
 =item conclusion units
@@ -89,7 +89,7 @@ a benign course."
 These make inferences and claims based on the results. The boundary between the conclusion and results
 may be vaguer than some of the others (although strong numeric data tends to mark results rather than)
 conclusions. A conclusion may also report a prognosis, but will do so in a different form, e.g.
-"RAS appears to be a pejorative prognostic factor in terms of survival in NSCLC globally, 
+"RAS appears to be a pejorative prognostic factor in terms of survival in NSCLC globally,
 in ADC and when it is studied by PCR."
 
 =back

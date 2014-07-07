@@ -1,6 +1,6 @@
 package Precis::Context;
 
-use common::sense; 
+use common::sense;
 
 use Moose;
 use namespace::autoclean;
@@ -113,11 +113,11 @@ sub get_token {
     } else {
       $log->trace("Read token: $token");
     }
-    return $token;    
+    return $token;
   }
 }
 
-# The core of teh parser. Based on the IPP general framework. 
+# The core of teh parser. Based on the IPP general framework.
 sub parse {
   my ($self) = @_;
 
@@ -142,12 +142,12 @@ sub parse {
     }
 
     # First off, do we match a pending expectation.
-    my $expectation_index = first_index { 
+    my $expectation_index = first_index {
       $_->test($self, $token, @{$_->arguments()});
     } @$expectations;
 
-    # If we match an expectation, execute it, remove it, and go back to the 
-    # reader. 
+    # If we match an expectation, execute it, remove it, and go back to the
+    # reader.
     if ($expectation_index != -1) {
       $log->debugf("Expectation: $expectation_index");
       my $expectation = $expectations->[$expectation_index];
@@ -156,7 +156,7 @@ sub parse {
       next;
     }
 
-    # Here, we want to do bottom-up processing. 
+    # Here, we want to do bottom-up processing.
     my $token_type = classify_token($token);
 
     if ($token_type eq 'event_builder') {
@@ -177,7 +177,7 @@ sub parse {
       push @$passive_buffer, [$token_type, $token];
     } elsif ($token_type eq 'token_maker') {
 
-      # More complex processing, so we can detect bigger tokens. 
+      # More complex processing, so we can detect bigger tokens.
       # We're in a loop here, with a sub-context.
 
       my $token_constituents = [$token];
@@ -202,11 +202,11 @@ sub parse {
         $next_token = $self->get_token();
       }
 
-      # Here we have a buffer of @token_constituents. Join it back with 
+      # Here we have a buffer of @token_constituents. Join it back with
       # spaces and push as a token maker.
 
       my $token_maker = join(" ", @$token_constituents);
-      
+
       push @$buffer, [$token_type, $token_maker];
 
       if ($interesting_token) {

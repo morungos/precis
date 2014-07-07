@@ -1,6 +1,6 @@
 package Precis::Linguistics;
 
-use common::sense; 
+use common::sense;
 
 use Sub::Exporter -setup => {
   exports => [ qw(passive_filter get_all_verbs) ],
@@ -22,9 +22,9 @@ use Tree::Range::RB;
 #     modal_perf =>   [ '@ MODAL * have been PART',    'MODAL @ * have been PART' ]
 # }
 
-# Returns the index if we have a passive verb, the index being that of the root 
+# Returns the index if we have a passive verb, the index being that of the root
 # verb. Otherwise, we return undef. Since zero is conceptually if not actually possible
-# best to use a definedness test for the result. 
+# best to use a definedness test for the result.
 
 sub passive_filter {
   my ($tokens, $index) = @_;
@@ -35,12 +35,12 @@ sub passive_filter {
     my $auxiliary = $target;
     $target = $tokens->[$index++] // return undef;
 
-    # If there's a not in there, we can legitimately skip it. We probably ought to 
-    # do something with it, but now is not really the time. 
+    # If there's a not in there, we can legitimately skip it. We probably ought to
+    # do something with it, but now is not really the time.
     if ($target =~ m{^not/}) {
       $target = $tokens->[$index++] // return undef;
     }
-    
+
     # We can have either a "be" or a "have been" next
     if ($target =~ m{^be/}) {
       $target = $tokens->[$index++] // return undef;
@@ -60,8 +60,8 @@ sub passive_filter {
       $target = $tokens->[$index++] // return undef;
     }
 
-    # And finally, the next thing should be a verb. If so, we return the 
-    # index of the primary verb. If it isn't a verb, return false. 
+    # And finally, the next thing should be a verb. If so, we return the
+    # index of the primary verb. If it isn't a verb, return false.
     if ($target =~ m{^\w+/VB}) {
       my ($voice) = ($auxiliary =~ m{/(\w+)});
       return ($index - 1, $original_index, $index - 1, $voice);
@@ -75,8 +75,8 @@ sub passive_filter {
     my $auxiliary = $target;
     $target = $tokens->[$index++] // return undef;
 
-    # If there's a not in there, we can legitimately skip it. We probably ought to 
-    # do something with it, but now is not really the time. 
+    # If there's a not in there, we can legitimately skip it. We probably ought to
+    # do something with it, but now is not really the time.
     if ($target =~ m{^not/}) {
       $target = $tokens->[$index++] // return undef;
     }
@@ -87,16 +87,16 @@ sub passive_filter {
     }
 
     # The next word could easily be: "been/being". Actually, we require that for had/have/has, because
-    # if it isn't, it isn't passive. This mainly affects where we look for related 
-    # info. 
+    # if it isn't, it isn't passive. This mainly affects where we look for related
+    # info.
     if ($target =~ m{^(?:being|been)/}) {
       $target = $tokens->[$index++] // return undef;
     } elsif ($auxiliary =~ m{^(?:have|had|has)/VB}) {
       return undef;
     }
 
-    # And finally, the next thing should be a verb. If so, we return the 
-    # index of the primary verb. If it isn't a verb, return false. 
+    # And finally, the next thing should be a verb. If so, we return the
+    # index of the primary verb. If it isn't a verb, return false.
     if ($target =~ m{^\w+/VB}) {
       my ($voice) = ($auxiliary =~ m{/(\w+)});
       return ($index - 1, $original_index, $index - 1, $voice);
@@ -169,5 +169,5 @@ Precis::Linguistics - Linguistics for the text analyzer
 
 TBD.
 
-=cut 
+=cut
 

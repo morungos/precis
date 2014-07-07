@@ -1,10 +1,10 @@
 package Precis::Data::AU;
 
-use common::sense; 
+use common::sense;
 
 use Moose;
 
-# A reorganized version of the knowledge base, we really don't need the level of meta-work that we 
+# A reorganized version of the knowledge base, we really don't need the level of meta-work that we
 # used to use, this is defined more directly as a set of Moose structures.
 
 has name => (

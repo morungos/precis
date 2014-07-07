@@ -1,6 +1,6 @@
 package Precis::Expectations::LookForAssociatedAUs;
 
-use common::sense; 
+use common::sense;
 
 use Moose;
 use namespace::autoclean;

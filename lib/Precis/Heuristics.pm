@@ -1,16 +1,16 @@
 package Precis::Heuristics;
 
-use common::sense; 
+use common::sense;
 
 use Sub::Exporter -setup => {
   exports => [ qw(resolve_prefix_suffix_omissions) ],
 };
 
-# In many cases, because abstracts are written with a significant word pressure, we 
+# In many cases, because abstracts are written with a significant word pressure, we
 # find a variety of compactions which we want to resolve before we continue. One of the
-# common ones is, e.g., "inhibitor-sensitive and -resistant EGFR mutants". When we 
-# find a word which begins (or ends) with a hyphen, we can attempt to expand and 
-# resolve the abbreviation. 
+# common ones is, e.g., "inhibitor-sensitive and -resistant EGFR mutants". When we
+# find a word which begins (or ends) with a hyphen, we can attempt to expand and
+# resolve the abbreviation.
 
 sub resolve_prefix_suffix_omissions {
   my ($tokens) = @_;
@@ -39,5 +39,5 @@ Precis::Heuristics - Heuristics for the text analyzer
 
 TBD.
 
-=cut 
+=cut
 

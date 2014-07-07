@@ -1,6 +1,6 @@
 package Precis::Expectation;
 
-use common::sense; 
+use common::sense;
 
 use Moose::Role;
 use namespace::autoclean;
@@ -25,7 +25,7 @@ Precis::Expectation - Expectation for the text analyzer
 
 Expectations are test/action objects that drive the top-down parsing system.
 Basically, they are generated so that when we encounter a word that we are
-interested in, we can act accordingly. 
+interested in, we can act accordingly.
 
 =head1 ATTRIBUTES
 
@@ -59,5 +59,5 @@ Returns the action coderef, which is applied to self, the context, and the token
 
 =back
 
-=cut 
+=cut
 

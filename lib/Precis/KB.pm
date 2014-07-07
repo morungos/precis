@@ -1,6 +1,6 @@
 package Precis::KB;
 
-use common::sense; 
+use common::sense;
 
 use Moose;
 use namespace::autoclean;
@@ -14,7 +14,7 @@ use Log::Any qw($log);
 
 use Precis::AU;
 
-# A reorganized version of the knowledge base, we really don't need the level of meta-work that we 
+# A reorganized version of the knowledge base, we really don't need the level of meta-work that we
 # used to use, this is defined more directly as a set of Moose structures.
 
 has action_units => (
@@ -61,7 +61,7 @@ sub initialize_action_units {
   }
 
   # Change parent names to parent references
-  # Add child references. Make these weak references. 
+  # Add child references. Make these weak references.
   while(my ($name) = each %$data) {
     my $au = $action_units->{$name};
     if (defined(my $parent = $au->parent())) {
